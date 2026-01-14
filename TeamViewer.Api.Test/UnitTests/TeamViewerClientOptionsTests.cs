@@ -3,7 +3,7 @@ namespace TeamViewer.Api.Test.UnitTests;
 /// <summary>
 /// Unit tests for TeamViewerClientOptions.
 /// </summary>
-public class TeamViewerClientOptionsTests
+public class TeamViewerClientOptionsTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public void DefaultValues_AreSetCorrectly()

@@ -7,7 +7,7 @@ namespace TeamViewer.Api.Test.UnitTests;
 /// <summary>
 /// Unit tests for LoggingHandler.
 /// </summary>
-public class LoggingHandlerTests
+public class LoggingHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public void Constructor_WithoutLogger_CreatesHandler()
@@ -100,38 +100,5 @@ public class LoggingHandlerTests
 		// Assert
 		capturedRequest.Should().NotBeNull();
 		capturedRequest!.RequestUri!.ToString().Should().Be(requestUri);
-	}
-
-	/// <summary>
-	/// Test handler that allows custom response creation.
-	/// </summary>
-	private class TestHandler : HttpMessageHandler
-	{
-		private readonly Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> _handler;
-
-		public TestHandler(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> handler)
-		{
-			_handler = handler;
-		}
-
-		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-			=> _handler(request, cancellationToken);
-	}
-
-	/// <summary>
-	/// Test logger that captures log entries.
-	/// </summary>
-	private class TestLogger<T> : ILogger<T>
-	{
-		public List<(LogLevel LogLevel, string Message)> LogEntries { get; } = [];
-
-		public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
-
-		public bool IsEnabled(LogLevel logLevel) => true;
-
-		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
-		{
-			LogEntries.Add((logLevel, formatter(state, exception)));
-		}
 	}
 }

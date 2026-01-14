@@ -6,7 +6,7 @@ namespace TeamViewer.Api.Test.UnitTests;
 /// <summary>
 /// Unit tests for RetryHandler.
 /// </summary>
-public class RetryHandlerTests
+public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public void Constructor_WithDefaults_CreatesHandler()
@@ -45,7 +45,7 @@ public class RetryHandlerTests
 		using var client = new HttpClient(handler);
 
 		// Act
-		var response = await client.GetAsync("https://example.com/test");
+		var response = await client.GetAsync("https://example.com/test", CancellationToken);
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -69,7 +69,7 @@ public class RetryHandlerTests
 		using var client = new HttpClient(handler);
 
 		// Act
-		var response = await client.GetAsync("https://example.com/test");
+		var response = await client.GetAsync("https://example.com/test", CancellationToken);
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -95,7 +95,7 @@ public class RetryHandlerTests
 		using var client = new HttpClient(handler);
 
 		// Act
-		var response = await client.GetAsync("https://example.com/test");
+		var response = await client.GetAsync("https://example.com/test", CancellationToken);
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -119,7 +119,7 @@ public class RetryHandlerTests
 		using var client = new HttpClient(handler);
 
 		// Act
-		var response = await client.GetAsync("https://example.com/test");
+		var response = await client.GetAsync("https://example.com/test", CancellationToken);
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
@@ -149,7 +149,7 @@ public class RetryHandlerTests
 		using var client = new HttpClient(handler);
 
 		// Act
-		await client.GetAsync("https://example.com/test");
+		await client.GetAsync("https://example.com/test", CancellationToken);
 
 		// Assert
 		callCount.Should().Be(2); // Initial + 1 retry
@@ -174,26 +174,10 @@ public class RetryHandlerTests
 		using var client = new HttpClient(handler);
 
 		// Act
-		var response = await client.GetAsync("https://example.com/test");
+		var response = await client.GetAsync("https://example.com/test", CancellationToken);
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
 		callCount.Should().Be(2);
-	}
-
-	/// <summary>
-	/// Test handler that allows custom request inspection.
-	/// </summary>
-	private class TestHandler : HttpMessageHandler
-	{
-		private readonly Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> _handler;
-
-		public TestHandler(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> handler)
-		{
-			_handler = handler;
-		}
-
-		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-			=> _handler(request, cancellationToken);
 	}
 }

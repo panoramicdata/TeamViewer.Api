@@ -8,7 +8,7 @@ namespace TeamViewer.Api.Test.UnitTests;
 /// <summary>
 /// Unit tests for ErrorHandler.
 /// </summary>
-public class ErrorHandlerTests
+public class ErrorHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public async Task SendAsync_SuccessResponse_ReturnsResponse()
@@ -26,7 +26,7 @@ public class ErrorHandlerTests
 		using var client = new HttpClient(handler);
 
 		// Act
-		var response = await client.GetAsync("https://example.com/test");
+		var response = await client.GetAsync("https://example.com/test", CancellationToken);
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -151,21 +151,5 @@ public class ErrorHandlerTests
 		// Assert
 		var exception = await act.Should().ThrowAsync<TeamViewerApiException>();
 		exception.Which.ResponseContent.Should().Be(responseContent);
-	}
-
-	/// <summary>
-	/// Test handler that allows custom response creation.
-	/// </summary>
-	private class TestHandler : HttpMessageHandler
-	{
-		private readonly Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> _handler;
-
-		public TestHandler(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> handler)
-		{
-			_handler = handler;
-		}
-
-		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-			=> _handler(request, cancellationToken);
 	}
 }

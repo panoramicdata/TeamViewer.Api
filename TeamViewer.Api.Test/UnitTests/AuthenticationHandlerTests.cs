@@ -6,7 +6,7 @@ namespace TeamViewer.Api.Test.UnitTests;
 /// <summary>
 /// Unit tests for AuthenticationHandler.
 /// </summary>
-public class AuthenticationHandlerTests
+public partial class AuthenticationHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public void Constructor_WithValidToken_CreatesHandler()
@@ -47,7 +47,7 @@ public class AuthenticationHandlerTests
 		using var client = new HttpClient(handler);
 
 		// Act
-		var response = await client.GetAsync("https://example.com/test");
+		var response = await client.GetAsync("https://example.com/test", CancellationToken);
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -72,25 +72,9 @@ public class AuthenticationHandlerTests
 		request.Headers.Add("X-Custom-Header", "custom-value");
 
 		// Act
-		var response = await client.SendAsync(request);
+		var response = await client.SendAsync(request, CancellationToken);
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
-	}
-
-	/// <summary>
-	/// Test handler that allows custom request inspection.
-	/// </summary>
-	private class TestHandler : HttpMessageHandler
-	{
-		private readonly Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> _handler;
-
-		public TestHandler(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> handler)
-		{
-			_handler = handler;
-		}
-
-		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-			=> _handler(request, cancellationToken);
 	}
 }
