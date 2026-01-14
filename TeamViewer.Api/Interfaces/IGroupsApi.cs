@@ -1,0 +1,90 @@
+using Refit;
+using TeamViewer.Api.Models.Requests;
+using TeamViewer.Api.Models.Responses;
+
+namespace TeamViewer.Api.Interfaces;
+
+/// <summary>
+/// API interface for group management.
+/// </summary>
+public interface IGroupsApi
+{
+	/// <summary>
+	/// Gets a list of groups.
+	/// </summary>
+	/// <param name="name">Filter by group name (optional).</param>
+	/// <param name="shared">Filter by shared status (optional).</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>A list of groups.</returns>
+	[Get("/groups")]
+	Task<GroupListResponse> GetGroupsAsync(
+		[AliasAs("name")] string? name = null,
+		[AliasAs("shared")] bool? shared = null,
+		CancellationToken cancellationToken = default);
+
+	/// <summary>
+	/// Gets a specific group by ID.
+	/// </summary>
+	/// <param name="groupId">The group ID (with or without 'g' prefix).</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>The group.</returns>
+	[Get("/groups/{groupId}")]
+	Task<Group> GetGroupAsync(string groupId, CancellationToken cancellationToken = default);
+
+	/// <summary>
+	/// Creates a new group.
+	/// </summary>
+	/// <param name="request">The create group request.</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>The created group.</returns>
+	[Post("/groups")]
+	Task<Group> CreateGroupAsync([Body] CreateGroupRequest request, CancellationToken cancellationToken = default);
+
+	/// <summary>
+	/// Updates an existing group.
+	/// </summary>
+	/// <param name="groupId">The group ID (with or without 'g' prefix).</param>
+	/// <param name="request">The update group request.</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>A task representing the operation.</returns>
+	[Put("/groups/{groupId}")]
+	Task UpdateGroupAsync(string groupId, [Body] UpdateGroupRequest request, CancellationToken cancellationToken = default);
+
+	/// <summary>
+	/// Deletes a group.
+	/// </summary>
+	/// <param name="groupId">The group ID (with or without 'g' prefix).</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>A task representing the operation.</returns>
+	[Delete("/groups/{groupId}")]
+	Task DeleteGroupAsync(string groupId, CancellationToken cancellationToken = default);
+
+	/// <summary>
+	/// Shares a group with users.
+	/// </summary>
+	/// <param name="groupId">The group ID (with or without 'g' prefix).</param>
+	/// <param name="request">The share group request.</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>A task representing the operation.</returns>
+	[Post("/groups/{groupId}/share")]
+	Task ShareGroupAsync(string groupId, [Body] ShareGroupRequest request, CancellationToken cancellationToken = default);
+
+	/// <summary>
+	/// Unshares a group from a user.
+	/// </summary>
+	/// <param name="groupId">The group ID (with or without 'g' prefix).</param>
+	/// <param name="userId">The user ID to unshare from.</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>A task representing the operation.</returns>
+	[Delete("/groups/{groupId}/share/{userId}")]
+	Task UnshareGroupAsync(string groupId, string userId, CancellationToken cancellationToken = default);
+
+	/// <summary>
+	/// Gets the users a group is shared with.
+	/// </summary>
+	/// <param name="groupId">The group ID (with or without 'g' prefix).</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>A list of shared users.</returns>
+	[Get("/groups/{groupId}/share")]
+	Task<GroupShareListResponse> GetGroupSharesAsync(string groupId, CancellationToken cancellationToken = default);
+}
