@@ -44,4 +44,19 @@ public interface ITeamViewerClient : IDisposable
 	/// Gets the Reports API for accessing connection reports.
 	/// </summary>
 	IReportsApi Reports { get; }
+
+	/// <summary>
+	/// Gets the Meetings API for managing meetings.
+	/// </summary>
+	IMeetingsApi Meetings { get; }
+
+	/// <summary>
+	/// Gets the Event Logging API for accessing audit events.
+	/// </summary>
+	IEventLoggingApi EventLogging { get; }
+
+	/// <summary>
+	/// Gets the Policies API for managing TeamViewer policies.
+	/// </summary>
+	IPoliciesApi Policies { get; }
 }

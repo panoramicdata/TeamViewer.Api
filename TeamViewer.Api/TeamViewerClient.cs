@@ -39,6 +39,15 @@ public class TeamViewerClient : ITeamViewerClient
 	/// <inheritdoc/>
 	public IReportsApi Reports { get; }
 
+	/// <inheritdoc/>
+	public IMeetingsApi Meetings { get; }
+
+	/// <inheritdoc/>
+	public IEventLoggingApi EventLogging { get; }
+
+	/// <inheritdoc/>
+	public IPoliciesApi Policies { get; }
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TeamViewerClient"/> class.
 	/// </summary>
@@ -85,6 +94,9 @@ public class TeamViewerClient : ITeamViewerClient
 		Devices = RestService.For<IDevicesApi>(_httpClient, refitSettings);
 		Contacts = RestService.For<IContactsApi>(_httpClient, refitSettings);
 		Reports = RestService.For<IReportsApi>(_httpClient, refitSettings);
+		Meetings = RestService.For<IMeetingsApi>(_httpClient, refitSettings);
+		EventLogging = RestService.For<IEventLoggingApi>(_httpClient, refitSettings);
+		Policies = RestService.For<IPoliciesApi>(_httpClient, refitSettings);
 	}
 
 	/// <inheritdoc/>

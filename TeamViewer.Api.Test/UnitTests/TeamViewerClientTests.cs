@@ -27,6 +27,9 @@ public class TeamViewerClientTests
 		client.Devices.Should().NotBeNull();
 		client.Contacts.Should().NotBeNull();
 		client.Reports.Should().NotBeNull();
+		client.Meetings.Should().NotBeNull();
+		client.EventLogging.Should().NotBeNull();
+		client.Policies.Should().NotBeNull();
 	}
 
 	[Fact]

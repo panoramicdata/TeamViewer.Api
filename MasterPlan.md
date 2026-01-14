@@ -397,12 +397,12 @@ TeamViewer.Api/
 | 3 | ✅ Complete | Users |
 | 4 | ✅ Complete | Groups |
 | 5 | ✅ Complete | Sessions |
-| 6 | ⏳ Pending | Reports |
-| 7 | ⏳ Pending | Meetings |
+| 6 | ✅ Complete | Reports |
+| 7 | ✅ Complete | Meetings |
 | 8 | ✅ Complete | Contacts |
 | 9 | ✅ Complete | Devices |
-| 10 | ⏳ Pending | Event Logging |
-| 11 | ⏳ Pending | Policies |
+| 10 | ✅ Complete | Event Logging |
+| 11 | ✅ Complete | Policies |
 | 12 | ⏳ Pending | Monitoring |
 | 13 | ⏳ Pending | Monitoring Policies |
 | 14 | ⏳ Pending | Patch Management |
