@@ -12,15 +12,11 @@ public interface IGroupsApi
 	/// <summary>
 	/// Gets a list of groups.
 	/// </summary>
-	/// <param name="name">Filter by group name (optional).</param>
-	/// <param name="shared">Filter by shared status (optional).</param>
+	/// <param name="request">The request parameters.</param>
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of groups.</returns>
 	[Get("/groups")]
-	Task<GroupListResponse> GetGroupsAsync(
-		[AliasAs("name")] string? name = null,
-		[AliasAs("shared")] bool? shared = null,
-		CancellationToken cancellationToken = default);
+	Task<GroupListResponse> GetGroupsAsync([Query] GetGroupsRequest request, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a specific group by ID.
@@ -29,7 +25,7 @@ public interface IGroupsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The group.</returns>
 	[Get("/groups/{groupId}")]
-	Task<Group> GetGroupAsync(string groupId, CancellationToken cancellationToken = default);
+	Task<Group> GetGroupAsync(string groupId, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Creates a new group.
@@ -38,7 +34,7 @@ public interface IGroupsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The created group.</returns>
 	[Post("/groups")]
-	Task<Group> CreateGroupAsync([Body] CreateGroupRequest request, CancellationToken cancellationToken = default);
+	Task<Group> CreateGroupAsync([Body] CreateGroupRequest request, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Updates an existing group.
@@ -48,7 +44,7 @@ public interface IGroupsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Put("/groups/{groupId}")]
-	Task UpdateGroupAsync(string groupId, [Body] UpdateGroupRequest request, CancellationToken cancellationToken = default);
+	Task UpdateGroupAsync(string groupId, [Body] UpdateGroupRequest request, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Deletes a group.
@@ -57,7 +53,7 @@ public interface IGroupsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Delete("/groups/{groupId}")]
-	Task DeleteGroupAsync(string groupId, CancellationToken cancellationToken = default);
+	Task DeleteGroupAsync(string groupId, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Shares a group with users.
@@ -67,7 +63,7 @@ public interface IGroupsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Post("/groups/{groupId}/share")]
-	Task ShareGroupAsync(string groupId, [Body] ShareGroupRequest request, CancellationToken cancellationToken = default);
+	Task ShareGroupAsync(string groupId, [Body] ShareGroupRequest request, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Unshares a group from a user.
@@ -77,7 +73,7 @@ public interface IGroupsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Delete("/groups/{groupId}/share/{userId}")]
-	Task UnshareGroupAsync(string groupId, string userId, CancellationToken cancellationToken = default);
+	Task UnshareGroupAsync(string groupId, string userId, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets the users a group is shared with.
@@ -86,5 +82,5 @@ public interface IGroupsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of shared users.</returns>
 	[Get("/groups/{groupId}/share")]
-	Task<GroupShareListResponse> GetGroupSharesAsync(string groupId, CancellationToken cancellationToken = default);
+	Task<GroupShareListResponse> GetGroupSharesAsync(string groupId, CancellationToken cancellationToken);
 }

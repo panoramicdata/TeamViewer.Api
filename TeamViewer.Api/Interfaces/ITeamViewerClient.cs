@@ -24,4 +24,24 @@ public interface ITeamViewerClient : IDisposable
 	/// Gets the Groups API for managing groups.
 	/// </summary>
 	IGroupsApi Groups { get; }
+
+	/// <summary>
+	/// Gets the Sessions API for managing session codes.
+	/// </summary>
+	ISessionsApi Sessions { get; }
+
+	/// <summary>
+	/// Gets the Devices API for managing devices in Computers &amp; Contacts.
+	/// </summary>
+	IDevicesApi Devices { get; }
+
+	/// <summary>
+	/// Gets the Contacts API for managing contacts.
+	/// </summary>
+	IContactsApi Contacts { get; }
+
+	/// <summary>
+	/// Gets the Reports API for accessing connection reports.
+	/// </summary>
+	IReportsApi Reports { get; }
 }

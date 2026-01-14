@@ -13,7 +13,7 @@ public class GroupsApiTests : IntegrationTestBase
 		EnsureConfigured();
 
 		// Act
-		var result = await Client!.Groups.GetGroupsAsync(cancellationToken: TestContext.Current.CancellationToken);
+		var result = await Client!.Groups.GetGroupsAsync(new GetGroupsRequest(), TestContext.Current.CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -26,7 +26,7 @@ public class GroupsApiTests : IntegrationTestBase
 		EnsureConfigured();
 
 		// First get a list of groups to find a valid name
-		var groups = await Client!.Groups.GetGroupsAsync(cancellationToken: TestContext.Current.CancellationToken);
+		var groups = await Client!.Groups.GetGroupsAsync(new GetGroupsRequest(), TestContext.Current.CancellationToken);
 
 		if (groups.Groups.Count == 0 || string.IsNullOrEmpty(groups.Groups[0].Name))
 		{
@@ -37,7 +37,7 @@ public class GroupsApiTests : IntegrationTestBase
 		var name = groups.Groups[0].Name;
 
 		// Act
-		var result = await Client!.Groups.GetGroupsAsync(name: name, cancellationToken: TestContext.Current.CancellationToken);
+		var result = await Client!.Groups.GetGroupsAsync(new GetGroupsRequest { Name = name }, TestContext.Current.CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -51,7 +51,7 @@ public class GroupsApiTests : IntegrationTestBase
 		EnsureConfigured();
 
 		// First get a list of groups to find a valid ID
-		var groups = await Client!.Groups.GetGroupsAsync(cancellationToken: TestContext.Current.CancellationToken);
+		var groups = await Client!.Groups.GetGroupsAsync(new GetGroupsRequest(), TestContext.Current.CancellationToken);
 
 		if (groups.Groups.Count == 0)
 		{
@@ -91,7 +91,7 @@ public class GroupsApiTests : IntegrationTestBase
 			await Client!.Groups.DeleteGroupAsync(createdGroup.Id!, TestContext.Current.CancellationToken);
 
 			// Verify deletion by trying to get the group (should fail)
-			var groups = await Client!.Groups.GetGroupsAsync(name: testGroupName, cancellationToken: TestContext.Current.CancellationToken);
+			var groups = await Client!.Groups.GetGroupsAsync(new GetGroupsRequest { Name = testGroupName }, TestContext.Current.CancellationToken);
 			groups.Groups.Should().NotContain(g => g.Id == createdGroup.Id);
 		}
 		catch

@@ -23,6 +23,10 @@ public class TeamViewerClientTests
 		client.Account.Should().NotBeNull();
 		client.Users.Should().NotBeNull();
 		client.Groups.Should().NotBeNull();
+		client.Sessions.Should().NotBeNull();
+		client.Devices.Should().NotBeNull();
+		client.Contacts.Should().NotBeNull();
+		client.Reports.Should().NotBeNull();
 	}
 
 	[Fact]

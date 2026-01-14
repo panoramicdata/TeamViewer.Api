@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Refit;
 using TeamViewer.Api.Handlers;
@@ -26,6 +27,18 @@ public class TeamViewerClient : ITeamViewerClient
 	/// <inheritdoc/>
 	public IGroupsApi Groups { get; }
 
+	/// <inheritdoc/>
+	public ISessionsApi Sessions { get; }
+
+	/// <inheritdoc/>
+	public IDevicesApi Devices { get; }
+
+	/// <inheritdoc/>
+	public IContactsApi Contacts { get; }
+
+	/// <inheritdoc/>
+	public IReportsApi Reports { get; }
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TeamViewerClient"/> class.
 	/// </summary>
@@ -40,7 +53,7 @@ public class TeamViewerClient : ITeamViewerClient
 			ContentSerializer = new SystemTextJsonContentSerializer(new JsonSerializerOptions
 			{
 				PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-				DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
 			})
 		};
 
@@ -48,10 +61,11 @@ public class TeamViewerClient : ITeamViewerClient
 		var authHandler = new AuthenticationHandler(options.ScriptToken);
 		var retryHandler = new RetryHandler(options.MaxRetryAttempts, options.RetryDelayMilliseconds, loggerFactory?.CreateLogger<RetryHandler>());
 		var loggingHandler = new LoggingHandler(loggerFactory?.CreateLogger<LoggingHandler>());
-		var errorHandler = new ErrorHandler();
-
-		// Chain handlers: Logging -> Auth -> Retry -> Error -> HttpClientHandler
-		errorHandler.InnerHandler = new HttpClientHandler();
+		var errorHandler = new ErrorHandler
+		{
+			// Chain handlers: Logging -> Auth -> Retry -> Error -> HttpClientHandler
+			InnerHandler = new HttpClientHandler()
+		};
 		retryHandler.InnerHandler = errorHandler;
 		authHandler.InnerHandler = retryHandler;
 		loggingHandler.InnerHandler = authHandler;
@@ -67,6 +81,10 @@ public class TeamViewerClient : ITeamViewerClient
 		Account = RestService.For<IAccountApi>(_httpClient, refitSettings);
 		Users = RestService.For<IUsersApi>(_httpClient, refitSettings);
 		Groups = RestService.For<IGroupsApi>(_httpClient, refitSettings);
+		Sessions = RestService.For<ISessionsApi>(_httpClient, refitSettings);
+		Devices = RestService.For<IDevicesApi>(_httpClient, refitSettings);
+		Contacts = RestService.For<IContactsApi>(_httpClient, refitSettings);
+		Reports = RestService.For<IReportsApi>(_httpClient, refitSettings);
 	}
 
 	/// <inheritdoc/>

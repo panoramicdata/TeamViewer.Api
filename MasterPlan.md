@@ -396,11 +396,11 @@ TeamViewer.Api/
 | 2 | ✅ Complete | Ping & Account |
 | 3 | ✅ Complete | Users |
 | 4 | ✅ Complete | Groups |
-| 5 | ⏳ Pending | Sessions |
+| 5 | ✅ Complete | Sessions |
 | 6 | ⏳ Pending | Reports |
 | 7 | ⏳ Pending | Meetings |
-| 8 | ⏳ Pending | Contacts |
-| 9 | ⏳ Pending | Devices |
+| 8 | ✅ Complete | Contacts |
+| 9 | ✅ Complete | Devices |
 | 10 | ⏳ Pending | Event Logging |
 | 11 | ⏳ Pending | Policies |
 | 12 | ⏳ Pending | Monitoring |

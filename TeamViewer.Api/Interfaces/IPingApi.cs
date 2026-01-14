@@ -14,5 +14,5 @@ public interface IPingApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>Ping response indicating token validity.</returns>
 	[Get("/ping")]
-	Task<PingResponse> PingAsync(CancellationToken cancellationToken = default);
+	Task<PingResponse> PingAsync(CancellationToken cancellationToken);
 }

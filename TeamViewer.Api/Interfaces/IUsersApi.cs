@@ -12,19 +12,11 @@ public interface IUsersApi
 	/// <summary>
 	/// Gets a list of users in the company.
 	/// </summary>
-	/// <param name="name">Filter by name (optional).</param>
-	/// <param name="email">Filter by email (optional).</param>
-	/// <param name="permissions">Filter by permissions (optional).</param>
-	/// <param name="full">If true, returns full user details including permissions.</param>
+	/// <param name="request">The request parameters.</param>
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of users.</returns>
 	[Get("/users")]
-	Task<UserListResponse> GetUsersAsync(
-		[AliasAs("name")] string? name = null,
-		[AliasAs("email")] string? email = null,
-		[AliasAs("permissions")] string? permissions = null,
-		[AliasAs("full_list")] bool full = false,
-		CancellationToken cancellationToken = default);
+	Task<UserListResponse> GetUsersAsync([Query] GetUsersRequest request, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a specific user by ID.
@@ -33,7 +25,7 @@ public interface IUsersApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The user.</returns>
 	[Get("/users/{userId}")]
-	Task<User> GetUserAsync(string userId, CancellationToken cancellationToken = default);
+	Task<User> GetUserAsync(string userId, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Creates a new user in the company.
@@ -42,7 +34,7 @@ public interface IUsersApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The created user.</returns>
 	[Post("/users")]
-	Task<User> CreateUserAsync([Body] CreateUserRequest request, CancellationToken cancellationToken = default);
+	Task<User> CreateUserAsync([Body] CreateUserRequest request, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Updates an existing user.
@@ -52,7 +44,7 @@ public interface IUsersApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Put("/users/{userId}")]
-	Task UpdateUserAsync(string userId, [Body] UpdateUserRequest request, CancellationToken cancellationToken = default);
+	Task UpdateUserAsync(string userId, [Body] UpdateUserRequest request, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Deletes a user from the company.
@@ -61,5 +53,5 @@ public interface IUsersApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Delete("/users/{userId}")]
-	Task DeleteUserAsync(string userId, CancellationToken cancellationToken = default);
+	Task DeleteUserAsync(string userId, CancellationToken cancellationToken);
 }

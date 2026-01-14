@@ -15,7 +15,7 @@ public interface IAccountApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The account information.</returns>
 	[Get("/account")]
-	Task<AccountResponse> GetAccountAsync(CancellationToken cancellationToken = default);
+	Task<AccountResponse> GetAccountAsync(CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Updates the current account information.
@@ -24,5 +24,5 @@ public interface IAccountApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The updated account information.</returns>
 	[Put("/account")]
-	Task<AccountResponse> UpdateAccountAsync([Body] AccountUpdateRequest request, CancellationToken cancellationToken = default);
+	Task<AccountResponse> UpdateAccountAsync([Body] AccountUpdateRequest request, CancellationToken cancellationToken);
 }
