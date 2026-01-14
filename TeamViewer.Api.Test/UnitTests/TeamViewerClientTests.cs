@@ -30,6 +30,7 @@ public class TeamViewerClientTests
 		client.Meetings.Should().NotBeNull();
 		client.EventLogging.Should().NotBeNull();
 		client.Policies.Should().NotBeNull();
+		client.RemoteManagement.Should().NotBeNull();
 	}
 
 	[Fact]

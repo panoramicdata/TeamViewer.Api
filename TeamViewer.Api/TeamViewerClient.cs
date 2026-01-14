@@ -48,6 +48,9 @@ public class TeamViewerClient : ITeamViewerClient
 	/// <inheritdoc/>
 	public IPoliciesApi Policies { get; }
 
+	/// <inheritdoc/>
+	public IRemoteManagementApi RemoteManagement { get; }
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TeamViewerClient"/> class.
 	/// </summary>
@@ -97,6 +100,7 @@ public class TeamViewerClient : ITeamViewerClient
 		Meetings = RestService.For<IMeetingsApi>(_httpClient, refitSettings);
 		EventLogging = RestService.For<IEventLoggingApi>(_httpClient, refitSettings);
 		Policies = RestService.For<IPoliciesApi>(_httpClient, refitSettings);
+		RemoteManagement = RestService.For<IRemoteManagementApi>(_httpClient, refitSettings);
 	}
 
 	/// <inheritdoc/>

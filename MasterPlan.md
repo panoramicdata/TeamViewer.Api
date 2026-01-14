@@ -403,10 +403,10 @@ TeamViewer.Api/
 | 9 | ✅ Complete | Devices |
 | 10 | ✅ Complete | Event Logging |
 | 11 | ✅ Complete | Policies |
-| 12 | ⏳ Pending | Monitoring |
-| 13 | ⏳ Pending | Monitoring Policies |
-| 14 | ⏳ Pending | Patch Management |
-| 15 | ⏳ Pending | Endpoint Protection |
+| 12 | ✅ Complete | Remote Management (consolidated) |
+| 13 | ✅ Complete | (merged into 12) |
+| 14 | ✅ Complete | (merged into 12) |
+| 15 | ✅ Complete | (merged into 12) |
 | 16 | ⏳ Pending | Finalization |
 
 ---

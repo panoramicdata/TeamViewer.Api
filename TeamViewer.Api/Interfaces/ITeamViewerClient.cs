@@ -59,4 +59,9 @@ public interface ITeamViewerClient : IDisposable
 	/// Gets the Policies API for managing TeamViewer policies.
 	/// </summary>
 	IPoliciesApi Policies { get; }
+
+	/// <summary>
+	/// Gets the Remote Management API for managed devices and groups.
+	/// </summary>
+	IRemoteManagementApi RemoteManagement { get; }
 }

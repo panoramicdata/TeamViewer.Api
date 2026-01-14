@@ -102,9 +102,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Related Projects
-
-- [Meraki.Api](https://github.com/panoramicdata/Meraki.Api) - Cisco Meraki API client
-- [LogicMonitor.Api](https://github.com/panoramicdata/LogicMonitor.Api) - LogicMonitor API client
-- [Lansweeper.Api](https://github.com/panoramicdata/Lansweeper.Api) - Lansweeper API client
