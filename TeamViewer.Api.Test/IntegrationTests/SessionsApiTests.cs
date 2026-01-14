@@ -1,20 +1,17 @@
 using TeamViewer.Api.Exceptions;
-using TeamViewer.Api.Test.Infrastructure;
 
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
 /// Integration tests for the Sessions API.
 /// </summary>
-public class SessionsApiTests : IntegrationTestBase
+public class SessionsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public async Task GetSessionsAsync_ReturnsSessionList()
 	{
-		EnsureConfigured();
-
 		// Act
-		var result = await Client!.Sessions.GetSessionsAsync(TestContext.Current.CancellationToken);
+		var result = await Client.Sessions.GetSessionsAsync(CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -22,67 +19,94 @@ public class SessionsApiTests : IntegrationTestBase
 	}
 
 	[Fact]
-	public async Task GetSessionAsync_WithValidSessionCode_ReturnsSession()
+	public async Task CreateAndDeleteSessionAsync_CreatesAndDeletesSession()
 	{
-		EnsureConfigured();
-
-		// First get a list of sessions to find a valid code
-		var sessions = await Client!.Sessions.GetSessionsAsync(TestContext.Current.CancellationToken);
-
-		if (sessions.Sessions.Count == 0)
-		{
-			Assert.Skip("No sessions available for testing.");
-			return;
-		}
-
-		var sessionCode = sessions.Sessions[0].Code!;
-
-		// Act
-		var result = await Client!.Sessions.GetSessionAsync(sessionCode, TestContext.Current.CancellationToken);
-
-		// Assert
-		result.Should().NotBeNull();
-		result.Code.Should().Be(sessionCode);
-	}
-
-	[Fact]
-	public async Task CreateSessionAsync_WithValidRequest_CreatesSession()
-	{
-		EnsureConfigured();
-
 		// First get a group to assign the session to
-		var groups = await Client!.Groups.GetGroupsAsync(new GetGroupsRequest(), TestContext.Current.CancellationToken);
-
-		if (groups.Groups.Count == 0)
-		{
-			Assert.Skip("No groups available for session testing.");
-			return;
-		}
-
-		var groupId = groups.Groups[0].Id!;
+		var testGroupName = $"{TestPrefix}SessionGroup_{DateTime.UtcNow:HHmmss}";
+		var group = await Client.Groups.CreateGroupAsync(
+			new CreateGroupRequest { Name = testGroupName },
+			CancellationToken);
 
 		try
 		{
 			// Act - Create
 			var createRequest = new CreateSessionRequest
 			{
-				GroupId = groupId,
-				Description = $"Test Session {DateTime.UtcNow:yyyyMMddHHmmss}",
+				GroupId = group.Id,
+				Description = $"{TestPrefix}Session_{DateTime.UtcNow:HHmmss}",
 				EndCustomer = "Test Customer"
 			};
 
-			var createdSession = await Client!.Sessions.CreateSessionAsync(createRequest, TestContext.Current.CancellationToken);
+			var createdSession = await Client.Sessions.CreateSessionAsync(createRequest, CancellationToken);
 
 			// Assert - Created
 			createdSession.Should().NotBeNull();
 			createdSession.Code.Should().NotBeNullOrEmpty();
 
-			// Clean up
-			await Client!.Sessions.DeleteSessionAsync(createdSession.Code!, TestContext.Current.CancellationToken);
+			// Get session to verify
+			var session = await Client.Sessions.GetSessionAsync(createdSession.Code!, CancellationToken);
+			session.Should().NotBeNull();
+			session.Code.Should().Be(createdSession.Code);
+
+			// Clean up session
+			await Client.Sessions.DeleteSessionAsync(createdSession.Code!, CancellationToken);
 		}
 		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_request") || ex.Message.Contains("permission"))
 		{
 			Assert.Skip("Session creation requires additional API permissions.");
+		}
+		finally
+		{
+			await Client.Groups.DeleteGroupAsync(group.Id!, CancellationToken);
+		}
+	}
+
+	[Fact]
+	public async Task UpdateSessionAsync_UpdatesSessionDescription()
+	{
+		// First get a group to assign the session to
+		var testGroupName = $"{TestPrefix}SessionUpdateGroup_{DateTime.UtcNow:HHmmss}";
+		var group = await Client.Groups.CreateGroupAsync(
+			new CreateGroupRequest { Name = testGroupName },
+			CancellationToken);
+
+		try
+		{
+			// Create session
+			var createRequest = new CreateSessionRequest
+			{
+				GroupId = group.Id,
+				Description = $"{TestPrefix}OriginalDesc_{DateTime.UtcNow:HHmmss}",
+				EndCustomer = "Test Customer"
+			};
+
+			var createdSession = await Client.Sessions.CreateSessionAsync(createRequest, CancellationToken);
+			var updatedDescription = $"{TestPrefix}UpdatedDesc_{DateTime.UtcNow:HHmmss}";
+
+			try
+			{
+				// Act - Update
+				await Client.Sessions.UpdateSessionAsync(
+					createdSession.Code!,
+					new UpdateSessionRequest { Description = updatedDescription },
+					CancellationToken);
+
+				// Verify update
+				var session = await Client.Sessions.GetSessionAsync(createdSession.Code!, CancellationToken);
+				session.Description.Should().Be(updatedDescription);
+			}
+			finally
+			{
+				await Client.Sessions.DeleteSessionAsync(createdSession.Code!, CancellationToken);
+			}
+		}
+		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_request") || ex.Message.Contains("permission"))
+		{
+			Assert.Skip("Session management requires additional API permissions.");
+		}
+		finally
+		{
+			await Client.Groups.DeleteGroupAsync(group.Id!, CancellationToken);
 		}
 	}
 }

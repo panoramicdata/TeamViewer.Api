@@ -1,11 +1,9 @@
-using TeamViewer.Api.Test.Infrastructure;
-
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
 /// Integration tests for the Account API.
 /// </summary>
-public class AccountApiTests : IntegrationTestBase
+public class AccountApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public async Task GetAccountAsync_ReturnsAccountInfo()
@@ -13,7 +11,7 @@ public class AccountApiTests : IntegrationTestBase
 		EnsureConfigured();
 
 		// Act
-		var result = await Client!.Account.GetAccountAsync(TestContext.Current.CancellationToken);
+		var result = await Client.Account.GetAccountAsync(CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();

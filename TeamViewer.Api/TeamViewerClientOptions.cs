@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+
 namespace TeamViewer.Api;
 
 /// <summary>
@@ -29,4 +32,9 @@ public class TeamViewerClientOptions
 	/// Gets or sets the HTTP request timeout.
 	/// </summary>
 	public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
+
+	/// <summary>
+	/// Gets or sets the logger for logging API client activities.
+	/// </summary>
+	public ILogger Logger { get; set; } = NullLogger.Instance;
 }

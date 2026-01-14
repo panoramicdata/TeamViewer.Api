@@ -20,6 +20,11 @@ public class TestConfig
 	public string ScriptToken { get; private set; } = string.Empty;
 
 	/// <summary>
+	/// Gets the test prefix for created resources.
+	/// </summary>
+	public string TestPrefix { get; private set; } = "ZZZ_Test_";
+
+	/// <summary>
 	/// Gets a value indicating whether tests can run.
 	/// </summary>
 	public bool IsConfigured => !string.IsNullOrEmpty(ScriptToken);
@@ -34,7 +39,8 @@ public class TestConfig
 
 		return new TestConfig
 		{
-			ScriptToken = config["TeamViewer:ScriptToken"] ?? string.Empty
+		ScriptToken = config["TeamViewer:ScriptToken"] ?? string.Empty,
+		TestPrefix = config["TeamViewer:TestPrefix"] ?? "ZZZ_Test_"
 		};
 	}
 }

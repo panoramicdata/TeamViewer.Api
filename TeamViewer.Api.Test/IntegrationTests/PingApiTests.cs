@@ -1,11 +1,9 @@
-using TeamViewer.Api.Test.Infrastructure;
-
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
 /// Integration tests for the Ping API.
 /// </summary>
-public class PingApiTests : IntegrationTestBase
+public class PingApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public async Task PingAsync_ReturnsTokenValid()
@@ -13,7 +11,9 @@ public class PingApiTests : IntegrationTestBase
 		EnsureConfigured();
 
 		// Act
-		var result = await Client!.Ping.PingAsync(TestContext.Current.CancellationToken);
+		var result = await Client
+			.Ping
+			.PingAsync(CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();

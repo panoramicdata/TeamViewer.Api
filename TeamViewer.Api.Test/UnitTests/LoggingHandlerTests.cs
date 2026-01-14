@@ -45,7 +45,7 @@ public class LoggingHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(
 		using var client = new HttpClient(handler);
 
 		// Act
-		var response = await client.GetAsync("https://example.com/test");
+		var response = await client.GetAsync("https://example.com/test", CancellationToken);
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -65,7 +65,7 @@ public class LoggingHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(
 		using var client = new HttpClient(handler);
 
 		// Act
-		await client.GetAsync("https://example.com/test");
+		await client.GetAsync("https://example.com/test", CancellationToken);
 
 		// Assert
 		logger.LogEntries.Should().HaveCount(2);
@@ -95,7 +95,7 @@ public class LoggingHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(
 		var requestUri = "https://example.com/api/test";
 
 		// Act
-		await client.GetAsync(requestUri);
+		await client.GetAsync(requestUri, CancellationToken);
 
 		// Assert
 		capturedRequest.Should().NotBeNull();

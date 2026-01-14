@@ -1,11 +1,9 @@
-using TeamViewer.Api.Test.Infrastructure;
-
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
 /// Integration tests for the Users API.
 /// </summary>
-public class UsersApiTests : IntegrationTestBase
+public class UsersApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public async Task GetUsersAsync_ReturnsUserList()
@@ -13,7 +11,9 @@ public class UsersApiTests : IntegrationTestBase
 		EnsureConfigured();
 
 		// Act
-		var result = await Client!.Users.GetUsersAsync(new GetUsersRequest(), TestContext.Current.CancellationToken);
+		var result = await Client
+			.Users
+			.GetUsersAsync(new GetUsersRequest(), CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -26,7 +26,9 @@ public class UsersApiTests : IntegrationTestBase
 		EnsureConfigured();
 
 		// Act
-		var result = await Client!.Users.GetUsersAsync(new GetUsersRequest { Full = true }, TestContext.Current.CancellationToken);
+		var result = await Client
+			.Users
+			.GetUsersAsync(new GetUsersRequest { Full = true }, CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -39,7 +41,9 @@ public class UsersApiTests : IntegrationTestBase
 		EnsureConfigured();
 
 		// Act
-		var result = await Client!.Users.GetUsersAsync(new GetUsersRequest { Name = "test" }, TestContext.Current.CancellationToken);
+		var result = await Client
+			.Users
+			.GetUsersAsync(new GetUsersRequest { Name = "test" }, CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -52,7 +56,9 @@ public class UsersApiTests : IntegrationTestBase
 		EnsureConfigured();
 
 		// First get a list of users to find a valid email
-		var users = await Client!.Users.GetUsersAsync(new GetUsersRequest(), TestContext.Current.CancellationToken);
+		var users = await Client
+			.Users
+			.GetUsersAsync(new GetUsersRequest(), CancellationToken);
 
 		if (users.Users.Count == 0 || string.IsNullOrEmpty(users.Users[0].Email))
 		{
@@ -63,7 +69,9 @@ public class UsersApiTests : IntegrationTestBase
 		var email = users.Users[0].Email;
 
 		// Act
-		var result = await Client!.Users.GetUsersAsync(new GetUsersRequest { Email = email }, TestContext.Current.CancellationToken);
+		var result = await Client
+			.Users
+			.GetUsersAsync(new GetUsersRequest { Email = email }, CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -77,7 +85,9 @@ public class UsersApiTests : IntegrationTestBase
 		EnsureConfigured();
 
 		// First get a list of users to find a valid ID
-		var users = await Client!.Users.GetUsersAsync(new GetUsersRequest(), TestContext.Current.CancellationToken);
+		var users = await Client
+			.Users
+			.GetUsersAsync(new GetUsersRequest(), CancellationToken);
 
 		if (users.Users.Count == 0)
 		{
@@ -88,7 +98,9 @@ public class UsersApiTests : IntegrationTestBase
 		var userId = users.Users[0].Id!;
 
 		// Act
-		var result = await Client!.Users.GetUserAsync(userId, TestContext.Current.CancellationToken);
+		var result = await Client
+			.Users
+			.GetUserAsync(userId, CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();

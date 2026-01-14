@@ -1,12 +1,11 @@
 using TeamViewer.Api.Exceptions;
-using TeamViewer.Api.Test.Infrastructure;
 
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
 /// Integration tests for the Remote Management API.
 /// </summary>
-public class RemoteManagementApiTests : IntegrationTestBase
+public class RemoteManagementApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public async Task GetManagedDevicesAsync_ReturnsManagedDeviceList()
@@ -16,9 +15,11 @@ public class RemoteManagementApiTests : IntegrationTestBase
 		try
 		{
 			// Act
-			var result = await Client!.RemoteManagement.GetManagedDevicesAsync(
-				new GetManagedDevicesRequest(),
-				TestContext.Current.CancellationToken);
+			var result = await Client
+				.RemoteManagement
+				.GetManagedDevicesAsync(
+					new GetManagedDevicesRequest(),
+					CancellationToken);
 
 			// Assert
 			result.Should().NotBeNull();
@@ -38,7 +39,9 @@ public class RemoteManagementApiTests : IntegrationTestBase
 		try
 		{
 			// Act
-			var result = await Client!.RemoteManagement.GetManagedGroupsAsync(TestContext.Current.CancellationToken);
+			var result = await Client
+				.RemoteManagement
+				.GetManagedGroupsAsync(CancellationToken);
 
 			// Assert
 			result.Should().NotBeNull();

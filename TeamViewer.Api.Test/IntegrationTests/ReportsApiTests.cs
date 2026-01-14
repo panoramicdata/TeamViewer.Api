@@ -1,11 +1,9 @@
-using TeamViewer.Api.Test.Infrastructure;
-
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
 /// Integration tests for the Reports API.
 /// </summary>
-public class ReportsApiTests : IntegrationTestBase
+public class ReportsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public async Task GetConnectionReportsAsync_ReturnsReportList()
@@ -13,7 +11,9 @@ public class ReportsApiTests : IntegrationTestBase
 		EnsureConfigured();
 
 		// Act
-		var result = await Client!.Reports.GetConnectionReportsAsync(new GetConnectionReportsRequest(), TestContext.Current.CancellationToken);
+		var result = await Client
+			.Reports
+			.GetConnectionReportsAsync(new GetConnectionReportsRequest(), CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -30,9 +30,11 @@ public class ReportsApiTests : IntegrationTestBase
 		var toDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
 
 		// Act
-		var result = await Client!.Reports.GetConnectionReportsAsync(
+		var result = await Client
+			.Reports
+			.GetConnectionReportsAsync(
 			new GetConnectionReportsRequest { FromDate = fromDate, ToDate = toDate },
-			TestContext.Current.CancellationToken);
+			CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();

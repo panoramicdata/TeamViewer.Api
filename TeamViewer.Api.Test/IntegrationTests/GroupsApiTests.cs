@@ -1,140 +1,138 @@
-using TeamViewer.Api.Test.Infrastructure;
-
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
 /// Integration tests for the Groups API.
 /// </summary>
-public class GroupsApiTests : IntegrationTestBase
+public class GroupsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public async Task GetGroupsAsync_ReturnsGroupList()
 	{
-		EnsureConfigured();
+		// Create a test group first
+		var testGroupName = $"{TestPrefix}GetGroups_{DateTime.UtcNow:HHmmss}";
+		var createdGroup = await Client.Groups.CreateGroupAsync(
+			new CreateGroupRequest { Name = testGroupName },
+			CancellationToken);
 
-		// Act
-		var result = await Client!.Groups.GetGroupsAsync(new GetGroupsRequest(), TestContext.Current.CancellationToken);
+		try
+		{
+			// Act
+			var result = await Client.Groups.GetAsync(new GetGroupsRequest(), CancellationToken);
 
-		// Assert
-		result.Should().NotBeNull();
-		result.Groups.Should().NotBeNull();
+			// Assert
+			result.Should().NotBeNull();
+			result.Groups.Should().NotBeNull();
+			result.Groups.Should().Contain(g => g.Id == createdGroup.Id);
+		}
+		finally
+		{
+			await Client.Groups.DeleteGroupAsync(createdGroup.Id!, CancellationToken);
+		}
 	}
 
 	[Fact]
 	public async Task GetGroupsAsync_WithNameFilter_ReturnsFilteredGroups()
 	{
-		EnsureConfigured();
+		// Create a test group first
+		var testGroupName = $"{TestPrefix}NameFilter_{DateTime.UtcNow:HHmmss}";
+		var createdGroup = await Client.Groups.CreateGroupAsync(
+			new CreateGroupRequest { Name = testGroupName },
+			CancellationToken);
 
-		// First get a list of groups to find a valid name
-		var groups = await Client!.Groups.GetGroupsAsync(new GetGroupsRequest(), TestContext.Current.CancellationToken);
-
-		if (groups.Groups.Count == 0 || string.IsNullOrEmpty(groups.Groups[0].Name))
+		try
 		{
-			Assert.Skip("No groups with name available for testing.");
-			return;
+			// Act
+			var result = await Client.Groups.GetAsync(
+				new GetGroupsRequest { Name = testGroupName },
+				CancellationToken);
+
+			// Assert
+			result.Should().NotBeNull();
+			result.Groups.Should().NotBeNull();
+			result.Groups.Should().Contain(g => g.Name == testGroupName);
 		}
-
-		var name = groups.Groups[0].Name;
-
-		// Act
-		var result = await Client!.Groups.GetGroupsAsync(new GetGroupsRequest { Name = name }, TestContext.Current.CancellationToken);
-
-		// Assert
-		result.Should().NotBeNull();
-		result.Groups.Should().NotBeNull();
-		result.Groups.Should().Contain(g => g.Name == name);
+		finally
+		{
+			await Client.Groups.DeleteGroupAsync(createdGroup.Id!, CancellationToken);
+		}
 	}
 
 	[Fact]
 	public async Task GetGroupAsync_WithValidGroupId_ReturnsGroup()
 	{
-		EnsureConfigured();
+		// Create a test group first
+		var testGroupName = $"{TestPrefix}GetById_{DateTime.UtcNow:HHmmss}";
+		var createdGroup = await Client.Groups.CreateGroupAsync(
+			new CreateGroupRequest { Name = testGroupName },
+			CancellationToken);
 
-		// First get a list of groups to find a valid ID
-		var groups = await Client!.Groups.GetGroupsAsync(new GetGroupsRequest(), TestContext.Current.CancellationToken);
-
-		if (groups.Groups.Count == 0)
+		try
 		{
-			Assert.Skip("No groups available for testing.");
-			return;
+			// Act
+			var result = await Client.Groups.GetGroupAsync(createdGroup.Id!, CancellationToken);
+
+			// Assert
+			result.Should().NotBeNull();
+			result.Id.Should().Be(createdGroup.Id);
+			result.Name.Should().Be(testGroupName);
 		}
-
-		var groupId = groups.Groups[0].Id!;
-
-		// Act
-		var result = await Client!.Groups.GetGroupAsync(groupId, TestContext.Current.CancellationToken);
-
-		// Assert
-		result.Should().NotBeNull();
-		result.Id.Should().Be(groupId);
+		finally
+		{
+			await Client.Groups.DeleteGroupAsync(createdGroup.Id!, CancellationToken);
+		}
 	}
 
 	[Fact]
 	public async Task CreateAndDeleteGroupAsync_CreatesAndDeletesGroup()
 	{
-		EnsureConfigured();
-
-		var testGroupName = $"Test Group {DateTime.UtcNow:yyyyMMddHHmmss}";
+		var testGroupName = $"{TestPrefix}CRUD_{DateTime.UtcNow:HHmmss}";
 
 		// Act - Create
-		var createRequest = new CreateGroupRequest { Name = testGroupName };
-		var createdGroup = await Client!.Groups.CreateGroupAsync(createRequest, TestContext.Current.CancellationToken);
+		var createdGroup = await Client.Groups.CreateGroupAsync(
+			new CreateGroupRequest { Name = testGroupName },
+			CancellationToken);
 
 		// Assert - Created
 		createdGroup.Should().NotBeNull();
 		createdGroup.Id.Should().NotBeNullOrEmpty();
 		createdGroup.Name.Should().Be(testGroupName);
 
-		try
-		{
-			// Act - Delete
-			await Client!.Groups.DeleteGroupAsync(createdGroup.Id!, TestContext.Current.CancellationToken);
+		// Act - Delete
+		await Client.Groups.DeleteGroupAsync(createdGroup.Id!, CancellationToken);
 
-			// Verify deletion by trying to get the group (should fail)
-			var groups = await Client!.Groups.GetGroupsAsync(new GetGroupsRequest { Name = testGroupName }, TestContext.Current.CancellationToken);
-			groups.Groups.Should().NotContain(g => g.Id == createdGroup.Id);
-		}
-		catch
-		{
-			// Clean up if test fails
-			try
-			{
-				await Client!.Groups.DeleteGroupAsync(createdGroup.Id!, TestContext.Current.CancellationToken);
-			}
-			catch
-			{
-				// Ignore cleanup errors
-			}
-			throw;
-		}
+		// Verify deletion
+		var groups = await Client.Groups.GetAsync(
+			new GetGroupsRequest { Name = testGroupName },
+			CancellationToken);
+		groups.Groups.Should().NotContain(g => g.Id == createdGroup.Id);
 	}
 
 	[Fact]
 	public async Task UpdateGroupAsync_UpdatesGroupName()
 	{
-		EnsureConfigured();
-
-		var testGroupName = $"Test Group {DateTime.UtcNow:yyyyMMddHHmmss}";
-		var updatedGroupName = $"Updated Group {DateTime.UtcNow:yyyyMMddHHmmss}";
+		var testGroupName = $"{TestPrefix}Update_{DateTime.UtcNow:HHmmss}";
+		var updatedGroupName = $"{TestPrefix}Updated_{DateTime.UtcNow:HHmmss}";
 
 		// Create a test group
-		var createRequest = new CreateGroupRequest { Name = testGroupName };
-		var createdGroup = await Client!.Groups.CreateGroupAsync(createRequest, TestContext.Current.CancellationToken);
+		var createdGroup = await Client.Groups.CreateGroupAsync(
+			new CreateGroupRequest { Name = testGroupName },
+			CancellationToken);
 
 		try
 		{
 			// Act - Update
-			var updateRequest = new UpdateGroupRequest { Name = updatedGroupName };
-			await Client!.Groups.UpdateGroupAsync(createdGroup.Id!, updateRequest, TestContext.Current.CancellationToken);
+			await Client.Groups.UpdateGroupAsync(
+				createdGroup.Id!,
+				new UpdateGroupRequest { Name = updatedGroupName },
+				CancellationToken);
 
 			// Verify update
-			var updatedGroup = await Client!.Groups.GetGroupAsync(createdGroup.Id!, TestContext.Current.CancellationToken);
+			var updatedGroup = await Client.Groups.GetGroupAsync(createdGroup.Id!, CancellationToken);
 			updatedGroup.Name.Should().Be(updatedGroupName);
 		}
 		finally
 		{
-			// Clean up
-			await Client!.Groups.DeleteGroupAsync(createdGroup.Id!, TestContext.Current.CancellationToken);
+			await Client.Groups.DeleteGroupAsync(createdGroup.Id!, CancellationToken);
 		}
 	}
 }

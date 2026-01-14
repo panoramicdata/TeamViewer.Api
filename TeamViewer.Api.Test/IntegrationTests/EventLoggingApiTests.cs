@@ -1,12 +1,11 @@
 using TeamViewer.Api.Exceptions;
-using TeamViewer.Api.Test.Infrastructure;
 
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
 /// Integration tests for the Event Logging API.
 /// </summary>
-public class EventLoggingApiTests : IntegrationTestBase
+public class EventLoggingApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public async Task GetEventsAsync_ReturnsEventList()
@@ -24,7 +23,7 @@ public class EventLoggingApiTests : IntegrationTestBase
 		try
 		{
 			// Act
-			var result = await Client!.EventLogging.GetEventsAsync(request, TestContext.Current.CancellationToken);
+			var result = await Client.EventLogging.GetEventsAsync(request, CancellationToken);
 
 			// Assert
 			result.Should().NotBeNull();
@@ -52,7 +51,7 @@ public class EventLoggingApiTests : IntegrationTestBase
 		try
 		{
 			// Act
-			var result = await Client!.EventLogging.GetEventsAsync(request, TestContext.Current.CancellationToken);
+			var result = await Client.EventLogging.GetEventsAsync(request, CancellationToken);
 
 			// Assert
 			result.Should().NotBeNull();

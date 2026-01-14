@@ -16,7 +16,7 @@ public interface IGroupsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of groups.</returns>
 	[Get("/groups")]
-	Task<GroupListResponse> GetGroupsAsync([Query] GetGroupsRequest request, CancellationToken cancellationToken);
+	Task<GroupListResponse> GetAsync([Query] GetGroupsRequest request, CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a specific group by ID.

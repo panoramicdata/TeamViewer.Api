@@ -15,42 +15,6 @@ public class TeamViewerClient : ITeamViewerClient
 	private readonly HttpClient _httpClient;
 	private bool _disposed;
 
-	/// <inheritdoc/>
-	public IPingApi Ping { get; }
-
-	/// <inheritdoc/>
-	public IAccountApi Account { get; }
-
-	/// <inheritdoc/>
-	public IUsersApi Users { get; }
-
-	/// <inheritdoc/>
-	public IGroupsApi Groups { get; }
-
-	/// <inheritdoc/>
-	public ISessionsApi Sessions { get; }
-
-	/// <inheritdoc/>
-	public IDevicesApi Devices { get; }
-
-	/// <inheritdoc/>
-	public IContactsApi Contacts { get; }
-
-	/// <inheritdoc/>
-	public IReportsApi Reports { get; }
-
-	/// <inheritdoc/>
-	public IMeetingsApi Meetings { get; }
-
-	/// <inheritdoc/>
-	public IEventLoggingApi EventLogging { get; }
-
-	/// <inheritdoc/>
-	public IPoliciesApi Policies { get; }
-
-	/// <inheritdoc/>
-	public IRemoteManagementApi RemoteManagement { get; }
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TeamViewerClient"/> class.
 	/// </summary>
@@ -102,6 +66,42 @@ public class TeamViewerClient : ITeamViewerClient
 		Policies = RestService.For<IPoliciesApi>(_httpClient, refitSettings);
 		RemoteManagement = RestService.For<IRemoteManagementApi>(_httpClient, refitSettings);
 	}
+
+	/// <inheritdoc/>
+	public IPingApi Ping { get; }
+
+	/// <inheritdoc/>
+	public IAccountApi Account { get; }
+
+	/// <inheritdoc/>
+	public IUsersApi Users { get; }
+
+	/// <inheritdoc/>
+	public IGroupsApi Groups { get; }
+
+	/// <inheritdoc/>
+	public ISessionsApi Sessions { get; }
+
+	/// <inheritdoc/>
+	public IDevicesApi Devices { get; }
+
+	/// <inheritdoc/>
+	public IContactsApi Contacts { get; }
+
+	/// <inheritdoc/>
+	public IReportsApi Reports { get; }
+
+	/// <inheritdoc/>
+	public IMeetingsApi Meetings { get; }
+
+	/// <inheritdoc/>
+	public IEventLoggingApi EventLogging { get; }
+
+	/// <inheritdoc/>
+	public IPoliciesApi Policies { get; }
+
+	/// <inheritdoc/>
+	public IRemoteManagementApi RemoteManagement { get; }
 
 	/// <inheritdoc/>
 	public void Dispose()

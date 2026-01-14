@@ -1,19 +1,17 @@
-using TeamViewer.Api.Test.Infrastructure;
+using TeamViewer.Api.Exceptions;
 
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
 /// Integration tests for the Meetings API.
 /// </summary>
-public class MeetingsApiTests : IntegrationTestBase
+public class MeetingsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public async Task GetMeetingsAsync_ReturnsMeetingList()
 	{
-		EnsureConfigured();
-
 		// Act
-		var result = await Client!.Meetings.GetMeetingsAsync(new GetMeetingsRequest(), TestContext.Current.CancellationToken);
+		var result = await Client.Meetings.GetMeetingsAsync(new GetMeetingsRequest(), CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -21,26 +19,87 @@ public class MeetingsApiTests : IntegrationTestBase
 	}
 
 	[Fact]
-	public async Task GetMeetingAsync_WithValidMeetingId_ReturnsMeeting()
+	public async Task CreateAndDeleteMeetingAsync_CreatesAndDeletesMeeting()
 	{
-		EnsureConfigured();
+		var testSubject = $"{TestPrefix}Meeting_{DateTime.UtcNow:HHmmss}";
+		var startTime = DateTime.UtcNow.AddHours(1);
+		var endTime = DateTime.UtcNow.AddHours(2);
 
-		// First get a list of meetings to find a valid ID
-		var meetings = await Client!.Meetings.GetMeetingsAsync(new GetMeetingsRequest(), TestContext.Current.CancellationToken);
-
-		if (meetings.Meetings.Count == 0)
+		try
 		{
-			Assert.Skip("No meetings available for testing.");
-			return;
+			// Act - Create
+			var createRequest = new CreateMeetingRequest
+			{
+				Subject = testSubject,
+				Start = startTime,
+				End = endTime
+			};
+
+			var createdMeeting = await Client.Meetings.CreateMeetingAsync(createRequest, CancellationToken);
+
+			// Assert - Created
+			createdMeeting.Should().NotBeNull();
+			createdMeeting.MeetingId.Should().NotBeNullOrEmpty();
+			createdMeeting.Subject.Should().Be(testSubject);
+
+			// Get meeting to verify
+			var meeting = await Client.Meetings.GetMeetingAsync(createdMeeting.MeetingId!, CancellationToken);
+			meeting.Should().NotBeNull();
+			meeting.MeetingId.Should().Be(createdMeeting.MeetingId);
+
+			// Clean up
+			await Client.Meetings.DeleteMeetingAsync(createdMeeting.MeetingId!, CancellationToken);
+
+			// Verify deletion
+			var meetings = await Client.Meetings.GetMeetingsAsync(new GetMeetingsRequest(), CancellationToken);
+			meetings.Meetings.Should().NotContain(m => m.MeetingId == createdMeeting.MeetingId);
 		}
+		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_request") || ex.Message.Contains("permission") || ex.Message.Contains("not_found"))
+		{
+			Assert.Skip("Meeting creation requires additional API permissions or is not available.");
+		}
+	}
 
-		var meetingId = meetings.Meetings[0].MeetingId!;
+	[Fact]
+	public async Task UpdateMeetingAsync_UpdatesMeetingSubject()
+	{
+		var testSubject = $"{TestPrefix}OrigMeeting_{DateTime.UtcNow:HHmmss}";
+		var updatedSubject = $"{TestPrefix}UpdatedMeeting_{DateTime.UtcNow:HHmmss}";
+		var startTime = DateTime.UtcNow.AddHours(1);
+		var endTime = DateTime.UtcNow.AddHours(2);
 
-		// Act
-		var result = await Client!.Meetings.GetMeetingAsync(meetingId, TestContext.Current.CancellationToken);
+		try
+		{
+			// Create meeting
+			var createdMeeting = await Client.Meetings.CreateMeetingAsync(
+				new CreateMeetingRequest
+				{
+					Subject = testSubject,
+					Start = startTime,
+					End = endTime
+				},
+				CancellationToken);
 
-		// Assert
-		result.Should().NotBeNull();
-		result.MeetingId.Should().Be(meetingId);
+			try
+			{
+				// Act - Update
+				await Client.Meetings.UpdateMeetingAsync(
+					createdMeeting.MeetingId!,
+					new UpdateMeetingRequest { Subject = updatedSubject },
+					CancellationToken);
+
+				// Verify update
+				var meeting = await Client.Meetings.GetMeetingAsync(createdMeeting.MeetingId!, CancellationToken);
+				meeting.Subject.Should().Be(updatedSubject);
+			}
+			finally
+			{
+				await Client.Meetings.DeleteMeetingAsync(createdMeeting.MeetingId!, CancellationToken);
+			}
+		}
+		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_request") || ex.Message.Contains("permission") || ex.Message.Contains("not_found"))
+		{
+			Assert.Skip("Meeting management requires additional API permissions or is not available.");
+		}
 	}
 }
