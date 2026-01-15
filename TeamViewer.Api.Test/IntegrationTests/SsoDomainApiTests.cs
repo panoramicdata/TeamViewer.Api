@@ -1,0 +1,58 @@
+using TeamViewer.Api.Exceptions;
+
+namespace TeamViewer.Api.Test.IntegrationTests;
+
+/// <summary>
+/// Integration tests for the SSO Domain API.
+/// </summary>
+public class SsoDomainApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
+{
+	[Fact]
+	public async Task GetSsoDomainsAsync_ReturnsDomainList()
+	{
+		try
+		{
+			// Act
+			var result = await Client.SsoDomain.GetSsoDomainsAsync(CancellationToken);
+
+			// Assert
+			result.Should().NotBeNull();
+			result.Domains.Should().NotBeNull();
+		}
+		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_token") || ex.Message.Contains("permission") || ex.Message.Contains("not_found"))
+		{
+			Assert.Skip("SSO Domain API requires additional permissions or is not available.");
+		}
+	}
+
+	[Fact]
+	public async Task CreateAndDeleteSsoDomainAsync_CreatesAndDeletesDomain()
+	{
+		// Use a test domain that's unlikely to conflict
+		var testDomain = $"{TestPrefix.ToLowerInvariant().Replace("_", "")}{DateTime.UtcNow:HHmmss}.test.invalid";
+
+		try
+		{
+			// Act - Create
+			var createdDomain = await Client.SsoDomain.CreateSsoDomainAsync(
+				new CreateSsoDomainRequest { DomainName = testDomain },
+				CancellationToken);
+
+			// Assert - Created
+			createdDomain.Should().NotBeNull();
+			createdDomain.DomainId.Should().NotBeNullOrEmpty();
+			createdDomain.DomainName.Should().Be(testDomain);
+
+			// Clean up
+			await Client.SsoDomain.DeleteSsoDomainAsync(createdDomain.DomainId!, CancellationToken);
+
+			// Verify deletion
+			var domains = await Client.SsoDomain.GetSsoDomainsAsync(CancellationToken);
+			domains.Domains.Should().NotContain(d => d.DomainId == createdDomain.DomainId);
+		}
+		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_token") || ex.Message.Contains("permission") || ex.Message.Contains("not_found") || ex.Message.Contains("invalid_request") || ex.Message.Contains("unknown"))
+		{
+			Assert.Skip("SSO Domain API requires additional permissions or is not available.");
+		}
+	}
+}

@@ -64,4 +64,14 @@ public interface ITeamViewerClient : IDisposable
 	/// Gets the Remote Management API for managed devices and groups.
 	/// </summary>
 	IRemoteManagementApi RemoteManagement { get; }
+
+	/// <summary>
+	/// Gets the Company Branding API for managing custom branding.
+	/// </summary>
+	ICompanyBrandingApi CompanyBranding { get; }
+
+	/// <summary>
+	/// Gets the SSO Domain API for managing SSO domains.
+	/// </summary>
+	ISsoDomainApi SsoDomain { get; }
 }

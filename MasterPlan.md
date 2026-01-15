@@ -381,10 +381,9 @@ TeamViewer.Api/
 | 9 | Devices | GET/PUT/POST/DELETE /devices |
 | 10 | Event Logging | POST /EventLogging |
 | 11 | Policies | GET/PUT /teamviewerpolicies |
-| 12 | Monitoring | Various monitoring endpoints |
-| 13 | Monitoring Policies | Various monitoring policy endpoints |
-| 14 | Patch Management | Various patch endpoints |
-| 15 | Endpoint Protection | Various protection endpoints |
+| 12 | Remote Management | GET/POST/DELETE /managed/devices, /managed/groups |
+| 17 | Company Branding | GET/PUT /companybranding |
+| 18 | SSO Domains | GET/POST/DELETE /ssoDomain |
 
 ---
 
@@ -403,11 +402,40 @@ TeamViewer.Api/
 | 9 | ✅ Complete | Devices |
 | 10 | ✅ Complete | Event Logging |
 | 11 | ✅ Complete | Policies |
-| 12 | ✅ Complete | Remote Management (consolidated) |
-| 13 | ✅ Complete | (merged into 12) |
-| 14 | ✅ Complete | (merged into 12) |
-| 15 | ✅ Complete | (merged into 12) |
-| 16 | ✅ Complete | Finalization |
+| 12 | ✅ Complete | Remote Management |
+| 17 | ✅ Complete | Company Branding |
+| 18 | ✅ Complete | SSO Domains |
+
+---
+
+## Phase 17: Company Branding API
+**Goal**: Custom branding for TeamViewer modules
+
+### Steps
+1. Create ICompanyBrandingApi.cs interface
+2. Create CompanyBranding models
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /companybranding - Get company branding settings
+- PUT /companybranding - Update company branding settings
+
+---
+
+## Phase 18: SSO Domains API
+**Goal**: SSO domain management
+
+### Steps
+1. Create ISsoDomainApi.cs interface
+2. Create SsoDomain models
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /ssoDomain - Get SSO domains
+- POST /ssoDomain - Create SSO domain
+- DELETE /ssoDomain/{domainId} - Delete SSO domain
 
 ---
 

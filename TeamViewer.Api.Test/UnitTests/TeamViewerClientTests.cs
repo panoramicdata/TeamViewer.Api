@@ -31,6 +31,8 @@ public class TeamViewerClientTests
 		client.EventLogging.Should().NotBeNull();
 		client.Policies.Should().NotBeNull();
 		client.RemoteManagement.Should().NotBeNull();
+		client.CompanyBranding.Should().NotBeNull();
+		client.SsoDomain.Should().NotBeNull();
 	}
 
 	[Fact]

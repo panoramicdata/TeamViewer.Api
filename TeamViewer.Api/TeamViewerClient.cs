@@ -65,6 +65,8 @@ public class TeamViewerClient : ITeamViewerClient
 		EventLogging = RestService.For<IEventLoggingApi>(_httpClient, refitSettings);
 		Policies = RestService.For<IPoliciesApi>(_httpClient, refitSettings);
 		RemoteManagement = RestService.For<IRemoteManagementApi>(_httpClient, refitSettings);
+		CompanyBranding = RestService.For<ICompanyBrandingApi>(_httpClient, refitSettings);
+		SsoDomain = RestService.For<ISsoDomainApi>(_httpClient, refitSettings);
 	}
 
 	/// <inheritdoc/>
@@ -102,6 +104,12 @@ public class TeamViewerClient : ITeamViewerClient
 
 	/// <inheritdoc/>
 	public IRemoteManagementApi RemoteManagement { get; }
+
+	/// <inheritdoc/>
+	public ICompanyBrandingApi CompanyBranding { get; }
+
+	/// <inheritdoc/>
+	public ISsoDomainApi SsoDomain { get; }
 
 	/// <inheritdoc/>
 	public void Dispose()
