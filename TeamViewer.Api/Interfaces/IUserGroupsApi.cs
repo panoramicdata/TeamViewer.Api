@@ -37,8 +37,8 @@ public interface IUserGroupsApi
 	/// <returns>The user group.</returns>
 	[Get("/usergroups/{groupId}")]
 	Task<UserGroup> GetAsync(
-		string groupId,
-		CancellationToken cancellationToken);
+	int groupId,
+	CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Updates a user group.
@@ -49,9 +49,9 @@ public interface IUserGroupsApi
 	/// <returns>A task representing the operation.</returns>
 	[Put("/usergroups/{groupId}")]
 	Task UpdateAsync(
-		string groupId,
-		[Body] UpdateUserGroupRequest request,
-		CancellationToken cancellationToken);
+	int groupId,
+	[Body] UpdateUserGroupRequest request,
+	CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Deletes a user group.
@@ -61,8 +61,8 @@ public interface IUserGroupsApi
 	/// <returns>A task representing the operation.</returns>
 	[Delete("/usergroups/{groupId}")]
 	Task DeleteAsync(
-		string groupId,
-		CancellationToken cancellationToken);
+	int groupId,
+	CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets members of a user group.
@@ -72,8 +72,8 @@ public interface IUserGroupsApi
 	/// <returns>A list of group members.</returns>
 	[Get("/usergroups/{groupId}/members")]
 	Task<UserGroupMemberListResponse> GetMembersAsync(
-		string groupId,
-		CancellationToken cancellationToken);
+	int groupId,
+	CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Adds a member to a user group.
@@ -84,9 +84,9 @@ public interface IUserGroupsApi
 	/// <returns>A task representing the operation.</returns>
 	[Post("/usergroups/{groupId}/members")]
 	Task AddMemberAsync(
-		string groupId,
-		[Body] AddUserGroupMemberRequest request,
-		CancellationToken cancellationToken);
+	int groupId,
+	[Body] AddUserGroupMemberRequest request,
+	CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Removes a member from a user group.
@@ -97,9 +97,9 @@ public interface IUserGroupsApi
 	/// <returns>A task representing the operation.</returns>
 	[Delete("/usergroups/{groupId}/members/{accountId}")]
 	Task RemoveMemberAsync(
-		string groupId,
-		string accountId,
-		CancellationToken cancellationToken);
+	int groupId,
+	string accountId,
+	CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets user roles assigned to a user group.
@@ -109,6 +109,6 @@ public interface IUserGroupsApi
 	/// <returns>A list of user roles.</returns>
 	[Get("/usergroups/{groupId}/userroles")]
 	Task<UserRoleListResponse> GetRolesAsync(
-		string groupId,
+		int groupId,
 		CancellationToken cancellationToken);
 }

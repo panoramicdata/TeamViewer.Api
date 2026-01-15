@@ -70,9 +70,10 @@ public class LoggingHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(
 		// Assert
 		logger.LogEntries.Should().HaveCount(2);
 		logger.LogEntries[0].LogLevel.Should().Be(LogLevel.Debug);
-		logger.LogEntries[0].Message.Should().Contain("HTTP");
-		logger.LogEntries[0].Message.Should().Contain("GET");
+		logger.LogEntries[0].Message.Should().Contain("Request Headers");
 		logger.LogEntries[1].LogLevel.Should().Be(LogLevel.Debug);
+		logger.LogEntries[1].Message.Should().Contain("HTTP");
+		logger.LogEntries[1].Message.Should().Contain("GET");
 		logger.LogEntries[1].Message.Should().Contain("responded");
 		logger.LogEntries[1].Message.Should().Contain("200");
 	}

@@ -11,7 +11,7 @@ public class UserGroup
 	/// Gets or sets the group ID.
 	/// </summary>
 	[JsonPropertyName("id")]
-	public string? Id { get; set; }
+	public int Id { get; set; }
 
 	/// <summary>
 	/// Gets or sets the group name.
@@ -30,4 +30,10 @@ public class UserGroup
 	/// </summary>
 	[JsonPropertyName("member_count")]
 	public int MemberCount { get; set; }
+
+	/// <summary>
+	/// Gets or sets the creation source type.
+	/// </summary>
+	[JsonPropertyName("creationSourceType")]
+	public int? CreationSourceType { get; set; }
 }

@@ -34,9 +34,9 @@ public interface IIotApi
 	/// </summary>
 	/// <param name="dashboardId">The dashboard ID.</param>
 	/// <param name="cancellationToken">Cancellation token.</param>
-	/// <returns>The dashboard.</returns>
+	/// <returns>The dashboard list response.</returns>
 	[Get("/iot/dashboards/{dashboardId}")]
-	Task<IotDashboard> GetDashboardAsync(
+	Task<IotDashboardListResponse> GetDashboardAsync(
 		string dashboardId,
 		CancellationToken cancellationToken);
 

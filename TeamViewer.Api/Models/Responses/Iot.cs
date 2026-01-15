@@ -38,9 +38,21 @@ public class IotDashboard
 public class IotDashboardListResponse
 {
 	/// <summary>
+	/// Gets or sets the current pagination token.
+	/// </summary>
+	[JsonPropertyName("currentPaginationToken")]
+	public string? CurrentPaginationToken { get; set; }
+
+	/// <summary>
+	/// Gets or sets the next pagination token.
+	/// </summary>
+	[JsonPropertyName("nextPaginationToken")]
+	public string? NextPaginationToken { get; set; }
+
+	/// <summary>
 	/// Gets or sets the list of dashboards.
 	/// </summary>
-	[JsonPropertyName("dashboards")]
+	[JsonPropertyName("resources")]
 	public List<IotDashboard> Dashboards { get; set; } = [];
 }
 
