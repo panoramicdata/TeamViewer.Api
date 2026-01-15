@@ -384,6 +384,11 @@ TeamViewer.Api/
 | 12 | Remote Management | GET/POST/DELETE /managed/devices, /managed/groups |
 | 17 | Company Branding | GET/PUT /companybranding |
 | 18 | SSO Domains | GET/POST/DELETE /ssoDomain |
+| 19 | User Devices | GET /users/{userId}/devices |
+| 20 | Group Devices | GET /groups/{groupId}/devices |
+| 21 | Meeting Extensions | GET /meetings/{meetingId}/invitation, participants |
+| 22 | Access Tokens | GET/POST/DELETE /account/accesstokens |
+| 23 | WebConnector | GET/POST /webconnector/sessions |
 
 ---
 
@@ -405,6 +410,11 @@ TeamViewer.Api/
 | 12 | ✅ Complete | Remote Management |
 | 17 | ✅ Complete | Company Branding |
 | 18 | ✅ Complete | SSO Domains |
+| 19 | ⏳ Pending | User Devices |
+| 20 | ⏳ Pending | Group Devices |
+| 21 | ⏳ Pending | Meeting Extensions |
+| 22 | ⏳ Pending | Access Tokens |
+| 23 | ⏳ Pending | WebConnector |
 
 ---
 
@@ -436,6 +446,75 @@ TeamViewer.Api/
 - GET /ssoDomain - Get SSO domains
 - POST /ssoDomain - Create SSO domain
 - DELETE /ssoDomain/{domainId} - Delete SSO domain
+
+---
+
+## Phase 19: User Devices API
+**Goal**: Get devices assigned to specific users
+
+### Steps
+1. Add GetUserDevicesAsync to IUsersApi.cs
+2. Create UserDevice models if needed
+3. Create tests
+
+### Endpoints
+- GET /users/{userId}/devices - Get devices assigned to user
+
+---
+
+## Phase 20: Group Devices API
+**Goal**: Get devices in specific groups
+
+### Steps
+1. Add GetGroupDevicesAsync to IGroupsApi.cs
+2. Create tests
+
+### Endpoints
+- GET /groups/{groupId}/devices - Get devices in group
+
+---
+
+## Phase 21: Meeting Extensions API
+**Goal**: Meeting invitation and participants
+
+### Steps
+1. Add endpoints to IMeetingsApi.cs
+2. Create MeetingInvitation and Participant models
+3. Create tests
+
+### Endpoints
+- GET /meetings/{meetingId}/invitation - Get meeting invitation email
+- GET /meetings/{meetingId}/participants - Get meeting participants
+
+---
+
+## Phase 22: Access Tokens API
+**Goal**: API access token management
+
+### Steps
+1. Add endpoints to IAccountApi.cs
+2. Create AccessToken models
+3. Create tests
+
+### Endpoints
+- GET /account/accesstokens - Get API access tokens
+- POST /account/accesstokens - Create API access token
+- DELETE /account/accesstokens/{tokenId} - Delete API access token
+
+---
+
+## Phase 23: WebConnector API
+**Goal**: WebConnector session management
+
+### Steps
+1. Create IWebConnectorApi.cs interface
+2. Create WebConnectorSession models
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /webconnector/sessions - Get WebConnector sessions
+- POST /webconnector/sessions - Create WebConnector session
 
 ---
 
