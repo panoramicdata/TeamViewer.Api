@@ -41,7 +41,9 @@ public class RetryHandler(
 			{
 				response = await base.SendAsync(CloneRequest(request), cancellationToken).ConfigureAwait(false);
 				if (!ShouldRetry(response.StatusCode) || attempt == maxRetries)
+				{
 					return response;
+				}
 			}
 			catch (HttpRequestException) when (attempt < maxRetries)
 			{
@@ -58,9 +60,15 @@ public class RetryHandler(
 	{
 		var clone = new HttpRequestMessage(request.Method, request.RequestUri) { Version = request.Version };
 		foreach (var header in request.Headers)
+		{
 			clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
+		}
+
 		if (request.Content != null)
+		{
 			clone.Content = request.Content;
+		}
+
 		return clone;
 	}
 }

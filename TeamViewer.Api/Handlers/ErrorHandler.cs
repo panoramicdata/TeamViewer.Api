@@ -15,7 +15,9 @@ public class ErrorHandler : DelegatingHandler
 		var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
+		{
 			return response;
+		}
 
 		var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 		string? errorMessage = null;
@@ -24,9 +26,13 @@ public class ErrorHandler : DelegatingHandler
 		{
 			using var doc = JsonDocument.Parse(content);
 			if (doc.RootElement.TryGetProperty("error", out var error))
+			{
 				errorMessage = error.GetString();
+			}
 			else if (doc.RootElement.TryGetProperty("error_description", out var desc))
+			{
 				errorMessage = desc.GetString();
+			}
 		}
 		catch (JsonException)
 		{

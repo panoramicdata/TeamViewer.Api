@@ -87,7 +87,10 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 			{
 				callCount++;
 				if (callCount < 2)
+				{
 					return Task.FromResult(new HttpResponseMessage(HttpStatusCode.TooManyRequests));
+				}
+
 				return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
 			})
 		};

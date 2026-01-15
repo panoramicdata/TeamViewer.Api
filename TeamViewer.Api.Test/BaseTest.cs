@@ -60,6 +60,7 @@ public abstract class BaseTest : IDisposable
 			ScriptToken = Config.ScriptToken,
 			Logger = Logger,
 		};
+
 		Client = new TeamViewerClient(options);
 	}
 
@@ -69,14 +70,18 @@ public abstract class BaseTest : IDisposable
 	protected void EnsureConfigured()
 	{
 		if (SkipReason is not null)
+		{
 			Assert.Skip(SkipReason);
+		}
 	}
 
 	/// <inheritdoc/>
 	public void Dispose()
 	{
 		if (_disposed)
+		{
 			return;
+		}
 
 		Client?.Dispose();
 		_disposed = true;

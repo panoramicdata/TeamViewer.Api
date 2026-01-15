@@ -6,7 +6,7 @@ namespace TeamViewer.Api.Test.UnitTests;
 /// <summary>
 /// Unit tests for AuthenticationHandler.
 /// </summary>
-public partial class AuthenticationHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
+public class AuthenticationHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
 	[Fact]
 	public void Constructor_WithValidToken_CreatesHandler()

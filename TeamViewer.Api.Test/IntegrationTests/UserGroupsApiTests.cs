@@ -38,26 +38,26 @@ public class UserGroupsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(t
 				CancellationToken);
 
 			created.Should().NotBeNull();
-			created.Id.Should().NotBeNullOrEmpty();
+			created.Id.Should().BeGreaterThan(0);
 			created.Name.Should().Be(testName);
 
 			// Read
-			var retrieved = await Client.UserGroups.GetAsync(created.Id!, CancellationToken);
+			var retrieved = await Client.UserGroups.GetAsync(created.Id, CancellationToken);
 			retrieved.Should().NotBeNull();
 			retrieved.Name.Should().Be(testName);
 
 			// Update
 			var updatedName = $"{testName}_Updated";
 			await Client.UserGroups.UpdateAsync(
-				created.Id!,
+				created.Id,
 				new UpdateUserGroupRequest { Name = updatedName },
 				CancellationToken);
 
-			var afterUpdate = await Client.UserGroups.GetAsync(created.Id!, CancellationToken);
+			var afterUpdate = await Client.UserGroups.GetAsync(created.Id, CancellationToken);
 			afterUpdate.Name.Should().Be(updatedName);
 
 			// Delete
-			await Client.UserGroups.DeleteAsync(created.Id!, CancellationToken);
+			await Client.UserGroups.DeleteAsync(created.Id, CancellationToken);
 
 			// Verify deletion
 			var groups = await Client.UserGroups.GetAsync(CancellationToken);

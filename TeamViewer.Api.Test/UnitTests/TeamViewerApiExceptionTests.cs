@@ -16,7 +16,7 @@ public class TeamViewerApiExceptionTests
 		var message = "Invalid request";
 
 		// Act
-		var exception = new TeamViewerApiException(statusCode, message);
+		var exception = new TeamViewerApiException(statusCode, message, responseContent: null);
 
 		// Assert
 		exception.StatusCode.Should().Be(statusCode);
@@ -68,7 +68,7 @@ public class TeamViewerApiExceptionTests
 	public void StatusCode_VariousValues_PreservesCorrectly(HttpStatusCode statusCode)
 	{
 		// Act
-		var exception = new TeamViewerApiException(statusCode, "Test message");
+		var exception = new TeamViewerApiException(statusCode, "Test message", responseContent: null);
 
 		// Assert
 		exception.StatusCode.Should().Be(statusCode);
@@ -78,7 +78,7 @@ public class TeamViewerApiExceptionTests
 	public void Exception_IsException_InheritsFromException()
 	{
 		// Act
-		var exception = new TeamViewerApiException(HttpStatusCode.BadRequest, "Test");
+		var exception = new TeamViewerApiException(HttpStatusCode.BadRequest, "Test", responseContent: null);
 
 		// Assert
 		exception.Should().BeAssignableTo<Exception>();

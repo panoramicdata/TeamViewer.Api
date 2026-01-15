@@ -20,7 +20,10 @@ public class TeamViewerApiException : Exception
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TeamViewerApiException"/> class.
 	/// </summary>
-	public TeamViewerApiException(HttpStatusCode statusCode, string message, string? responseContent = null)
+	public TeamViewerApiException(
+		HttpStatusCode statusCode,
+		string message,
+		string? responseContent)
 		: base(message)
 	{
 		StatusCode = statusCode;
@@ -30,7 +33,10 @@ public class TeamViewerApiException : Exception
 	/// <summary>
 	/// Initializes a new instance of the <see cref="TeamViewerApiException"/> class.
 	/// </summary>
-	public TeamViewerApiException(HttpStatusCode statusCode, string message, Exception innerException)
+	public TeamViewerApiException(
+		HttpStatusCode statusCode,
+		string message,
+		Exception innerException)
 		: base(message, innerException)
 	{
 		StatusCode = statusCode;
