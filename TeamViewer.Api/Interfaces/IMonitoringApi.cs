@@ -23,7 +23,7 @@ public interface IMonitoringApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of monitored devices.</returns>
 	[Get("/monitoring/devices")]
-	Task<MonitoredDeviceListResponse> GetDevicesAsync(
+	Task<List<MonitoredDevice>> GetDevicesAsync(
 		CancellationToken cancellationToken);
 
 	/// <summary>

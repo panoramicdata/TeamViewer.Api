@@ -31,9 +31,9 @@ public interface IUserRolesApi
 	/// Gets available permissions.
 	/// </summary>
 	/// <param name="cancellationToken">Cancellation token.</param>
-	/// <returns>A list of available permissions.</returns>
+	/// <returns>A list of available permission names.</returns>
 	[Get("/userroles/permissions")]
-	Task<PermissionListResponse> GetPermissionsAsync(
+	Task<List<string>> GetPermissionsAsync(
 		CancellationToken cancellationToken);
 
 	/// <summary>
