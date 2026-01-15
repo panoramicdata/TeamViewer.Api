@@ -429,18 +429,97 @@ TeamViewer.Api/
 | 22 | ✅ Complete | Access Tokens |
 | 23 | ✅ Complete | WebConnector |
 | 24 | ✅ Complete | User Groups |
-| 25 | ✅ Complete | User Roles |
-| 26 | ✅ Complete | Monitoring |
+| 25 | ⚠️ Partial | User Roles - assignments require Tensor |
+| 26 | ⚠️ Partial | Monitoring - requires Remote Management license |
 | 27 | ✅ Complete | Monitoring Policy |
 | 28 | ✅ Complete | Patch Management |
-| 29 | ✅ Complete | Endpoint Protection |
+| 29 | ⚠️ Partial | Endpoint Protection - requires license |
 | 30 | ✅ Complete | Chat |
-| 31 | ✅ Complete | Conditional Access |
+| 31 | ⚠️ Partial | Conditional Access - requires Tensor |
 | 32 | ✅ Complete | Reports Extensions |
 | 33 | ✅ Complete | Company |
 | 34 | ✅ Complete | Company Address Book |
 | 35 | ✅ Complete | SSO Extensions |
-| 36 | ✅ Complete | IoT |
+| 36 | ⚠️ Partial | IoT - some endpoints require IoT license |
+| 37 | 🔄 In Progress | Feature Access & Test Remediation |
+
+---
+
+## Test Results Summary
+
+**Last Run**: 2026-01-15
+
+| Category | Count |
+|----------|-------|
+| ✅ Passed | 96 |
+| ❌ Failed | 11 |
+| ⏭️ Skipped | 24 |
+| **Total** | 131 |
+
+### Failing Tests Analysis
+
+| API | Test | Error | Required Feature |
+|-----|------|-------|------------------|
+| IoT | `GetLatestDataAsync_ReturnsData` | API error | IoT license |
+| IoT | `GetWidgetsAsync_WithValidDashboard_ReturnsWidgets` | API error | IoT license |
+| EndpointProtection | `GetEndpointsAsync_ReturnsEndpointList` | `internal_error` | Endpoint Protection license |
+| ConditionalAccess | `GetFeatureOptionsAsync_ReturnsOptions` | `internal_error` | TeamViewer Tensor |
+| ConditionalAccess | `GetApprovalOptionsAsync_ReturnsOptions` | `internal_error` | TeamViewer Tensor |
+| ConditionalAccess | `GetTimeOptionsAsync_ReturnsOptions` | `internal_error` | TeamViewer Tensor |
+| ConditionalAccess | `GetRulesAsync_ReturnsRuleList` | `internal_error` | TeamViewer Tensor |
+| ConditionalAccess | `CreateUpdateDeleteDirectoryGroupAsync` | `internal_error` | TeamViewer Tensor |
+| ConditionalAccess | `CreateUpdateDeleteRuleAsync` | `internal_error` | TeamViewer Tensor |
+| UserRoles | `GetAccountAssignmentsAsync_ReturnsAssignments` | API error | Role management permissions |
+| UserRoles | `GetUserGroupAssignmentsAsync_ReturnsAssignments` | API error | Role management permissions |
+
+---
+
+## Phase 37: Feature Access & Test Remediation
+**Goal**: Obtain required TeamViewer licenses and fix remaining API integration issues
+
+### Required Licenses/Features
+
+| Feature | License Required | Purpose |
+|---------|------------------|---------|
+| Conditional Access | TeamViewer Tensor | Directory groups, rules, access control |
+| Endpoint Protection | Endpoint Protection Add-on | Device security management |
+| IoT Monitoring | IoT Add-on | Dashboard widgets, sensor data |
+| Remote Management | Remote Management license | Device monitoring, hardware/software info |
+| Role Assignments | Company Admin or custom role | User role assignment management |
+
+### Action Plan
+
+#### Step 1: Contact TeamViewer Sales/Support
+1. Request trial access to TeamViewer Tensor (includes Conditional Access)
+2. Request trial access to Endpoint Protection add-on
+3. Request trial access to IoT monitoring features
+4. Confirm Remote Management is enabled on test account
+
+#### Step 2: API Token Permissions
+1. Review script token permissions in TeamViewer Management Console
+2. Ensure token has the following scopes:
+   - User management (read/write)
+   - Group management (read/write)
+   - Session management (read/write)
+   - Conditional Access management
+   - Role assignment management
+   - Monitoring (read)
+   - Asset management (read)
+
+#### Step 3: Fix API Response Models
+After obtaining access, verify and fix any remaining model mismatches:
+1. Run failing tests with debug logging enabled
+2. Compare actual API responses to model definitions
+3. Update models as needed (property names, types, nullable fields)
+
+#### Step 4: Validate All Tests Pass
+1. Run full test suite: `dotnet test`
+2. Ensure all 131 tests pass
+3. No tests should be skipped due to API errors
+
+### Deliverable
+- All integration tests passing (or properly skipped with documented reason)
+- Full API coverage validated against live TeamViewer instance
 
 ---
 
@@ -807,3 +886,29 @@ TeamViewer.Api/
 - IDs are prefixed: u=user, g=group, m=meeting, s=session, c=contact, d=device, r=remotecontrol
 - API base URL: https://webapi.teamviewer.com/api/v1/
 - Authentication: Bearer token in Authorization header
+
+---
+
+## Phase 38: Production Release
+**Goal**: Publish stable v1.0 release to NuGet
+
+### Prerequisites
+- [ ] All Phase 37 actions complete
+- [ ] All integration tests passing
+- [ ] Code coverage > 80%
+- [ ] README.md complete with examples
+- [ ] CHANGELOG.md updated
+
+### Steps
+1. Update `version.json` to remove `-beta` suffix
+2. Set version to `1.0` for stable release
+3. Update `publicReleaseRefSpec` to include `main` branch
+4. Final review of XML documentation
+5. Run `.\Publish.ps1` to publish to NuGet
+6. Create GitHub release with tag `v1.0.0`
+7. Announce on relevant channels
+
+### Post-Release
+- Monitor NuGet download stats
+- Address any community-reported issues
+- Plan v1.1 features based on feedback
