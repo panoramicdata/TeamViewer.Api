@@ -389,6 +389,19 @@ TeamViewer.Api/
 | 21 | Meeting Extensions | GET /meetings/{meetingId}/invitation, participants |
 | 22 | Access Tokens | GET/POST/DELETE /account/accesstokens |
 | 23 | WebConnector | GET/POST /webconnector/sessions |
+| 24 | User Groups | CRUD /usergroups, members, roles |
+| 25 | User Roles | Roles, permissions, assignments |
+| 26 | Monitoring | Alarms, device hardware/software/info |
+| 27 | Monitoring Policy | Policy CRUD + assignment |
+| 28 | Patch Management | Devices, patches, policy |
+| 29 | Endpoint Protection | Endpoints, install, link devices |
+| 30 | Chat | Messages, Rooms, Send/Read |
+| 31 | Conditional Access | Directory groups, rules, options |
+| 32 | Reports Extensions | Screenshots, AI summaries, transcripts |
+| 33 | Company | Company info |
+| 34 | Company Address Book | Hidden members |
+| 35 | SSO Extensions | Exclusion/inclusion lists |
+| 36 | IoT | Dashboards, widgets, sensors, metrics |
 
 ---
 
@@ -415,6 +428,19 @@ TeamViewer.Api/
 | 21 | ✅ Complete | Meeting Extensions |
 | 22 | ✅ Complete | Access Tokens |
 | 23 | ✅ Complete | WebConnector |
+| 24 | ⏳ Pending | User Groups |
+| 25 | ⏳ Pending | User Roles |
+| 26 | ⏳ Pending | Monitoring |
+| 27 | ⏳ Pending | Monitoring Policy |
+| 28 | ⏳ Pending | Patch Management |
+| 29 | ⏳ Pending | Endpoint Protection |
+| 30 | ⏳ Pending | Chat |
+| 31 | ⏳ Pending | Conditional Access |
+| 32 | ⏳ Pending | Reports Extensions |
+| 33 | ⏳ Pending | Company |
+| 34 | ⏳ Pending | Company Address Book |
+| 35 | ⏳ Pending | SSO Extensions |
+| 36 | ⏳ Pending | IoT |
 
 ---
 
@@ -515,6 +541,264 @@ TeamViewer.Api/
 ### Endpoints
 - GET /webconnector/sessions - Get WebConnector sessions
 - POST /webconnector/sessions - Create WebConnector session
+
+---
+
+## Phase 24: User Groups API
+**Goal**: User group management with members and roles
+
+### Steps
+1. Create IUserGroupsApi.cs interface
+2. Create UserGroup models
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /usergroups - Get user groups
+- POST /usergroups - Create user group
+- GET /usergroups/{groupId} - Get user group
+- PUT /usergroups/{groupId} - Update user group
+- DELETE /usergroups/{groupId} - Delete user group
+- GET /usergroups/{groupId}/members - Get group members
+- POST /usergroups/{groupId}/members - Add member
+- DELETE /usergroups/{groupId}/members/{accountId} - Remove member
+- GET /usergroups/{groupId}/userroles - Get group roles
+
+---
+
+## Phase 25: User Roles API
+**Goal**: Role-based access control management
+
+### Steps
+1. Create IUserRolesApi.cs interface
+2. Create UserRole models
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /userroles - Get user roles
+- GET /userroles/predefined - Get predefined roles
+- GET /userroles/permissions - Get available permissions
+- POST /userroles/assign/account - Assign role to account
+- POST /userroles/unassign/account - Unassign role from account
+- POST /userroles/assign/usergroup - Assign role to group
+- POST /userroles/unassign/usergroup - Unassign role from group
+- GET /userroles/assignments/account - Get account role assignments
+- GET /userroles/assignments/usergroups - Get group role assignments
+
+---
+
+## Phase 26: Monitoring API
+**Goal**: Device monitoring and alarms
+
+### Steps
+1. Create IMonitoringApi.cs interface
+2. Create Monitoring models (Alarm, DeviceInfo, Hardware, Software)
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /monitoring/alarms - Get monitoring alarms
+- GET /monitoring/devices - Get monitored devices
+- GET /monitoring/devices/{deviceId}/information - Get device information
+- GET /monitoring/devices/{deviceId}/hardware - Get device hardware info
+- GET /monitoring/devices/{deviceId}/software - Get device software info
+
+---
+
+## Phase 27: Monitoring Policy API
+**Goal**: Monitoring policy management
+
+### Steps
+1. Create IMonitoringPolicyApi.cs interface
+2. Create MonitoringPolicy models
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /Monitoring/Policy - Get monitoring policies
+- POST /Monitoring/Policy - Create monitoring policy
+- GET /Monitoring/Policy/{id} - Get monitoring policy
+- PUT /Monitoring/Policy/{id} - Update monitoring policy
+- DELETE /Monitoring/Policy/{id} - Delete monitoring policy
+- POST /Monitoring/Policy/Assign - Assign monitoring policy
+
+---
+
+## Phase 28: Patch Management API
+**Goal**: Patch management for devices
+
+### Steps
+1. Create IPatchManagementApi.cs interface
+2. Create PatchManagement models
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /patchmanagement/devices - Get devices
+- GET /patchmanagement/devices/{deviceId}/patches/missing - Get missing patches
+- GET /patchmanagement/scanresultcounts - Get scan result counts
+- GET /PatchManagement/Policy - Get patch policies
+- POST /PatchManagement/Policy - Create patch policy
+- GET /PatchManagement/Policy/{id} - Get patch policy
+- PUT /PatchManagement/Policy/{id} - Update patch policy
+- DELETE /PatchManagement/Policy/{id} - Delete patch policy
+- POST /PatchManagement/Policy/Assign - Assign patch policy
+
+---
+
+## Phase 29: Endpoint Protection API
+**Goal**: Endpoint protection v2 management
+
+### Steps
+1. Create IEndpointProtectionApi.cs interface
+2. Create EndpointProtection models
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /endpointprotectionv2/endpoints - Get endpoints
+- POST /endpointprotectionv2/install - Install endpoint protection
+- POST /endpointprotectionv2/linkdevices - Link devices
+
+---
+
+## Phase 30: Chat API
+**Goal**: TeamViewer chat functionality
+
+### Steps
+1. Create IChatApi.cs interface
+2. Create Chat models (Message, Room)
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /chat/Rooms - Get chat rooms
+- GET /chat/Messages - Get messages
+- POST /chat/SendMessage - Send message
+- POST /chat/MarkMessageAsRead - Mark message as read
+- GET /chat/UnreadMessages - Get unread messages
+
+---
+
+## Phase 31: Conditional Access API
+**Goal**: Conditional access rules and directory groups
+
+### Steps
+1. Create IConditionalAccessApi.cs interface
+2. Create ConditionalAccess models
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /ConditionalAccess/DirectoryGroups - Get directory groups
+- POST /ConditionalAccess/DirectoryGroups - Create directory group
+- GET /ConditionalAccess/DirectoryGroups/{id} - Get directory group
+- PUT /ConditionalAccess/DirectoryGroups/{id} - Update directory group
+- DELETE /ConditionalAccess/DirectoryGroups/{id} - Delete directory group
+- GET /ConditionalAccess/DirectoryGroups/{id}/members - Get members
+- GET /ConditionalAccess/Rules - Get rules
+- POST /ConditionalAccess/Rules - Create rule
+- GET /ConditionalAccess/Rules/{id} - Get rule
+- PUT /ConditionalAccess/Rules/{id} - Update rule
+- DELETE /ConditionalAccess/Rules/{id} - Delete rule
+- GET /ConditionalAccess/Options/Approval - Get approval options
+- GET /ConditionalAccess/Options/Features - Get feature options
+- GET /ConditionalAccess/Options/Time - Get time options
+
+---
+
+## Phase 32: Reports Extensions API
+**Goal**: Extended reporting features
+
+### Steps
+1. Add endpoints to IReportsApi.cs
+2. Create Screenshot, Transcript models
+3. Create tests
+
+### Endpoints
+- GET /reports/connections/{id}/screenshots - Get screenshots
+- GET /reports/connections/{id}/{screenshotId}/screenshot - Get screenshot
+- GET /reports/connections/{id}/ai-summary - Get AI summary
+- GET /reports/connections/{id}/chat-transcript - Get chat transcript
+- GET /reports/connections/{id}/voice-transcript - Get voice transcript
+- GET /reports/devices - Get device reports
+- GET /reports/devices/{id}/ai-summary - Get AI summary
+- GET /reports/devices/{id}/chat-transcript - Get chat transcript
+
+---
+
+## Phase 33: Company API
+**Goal**: Company information
+
+### Steps
+1. Create ICompanyApi.cs interface
+2. Create Company models
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /company - Get company information
+
+---
+
+## Phase 34: Company Address Book API
+**Goal**: Company address book management
+
+### Steps
+1. Create ICompanyAddressBookApi.cs interface
+2. Create AddressBook models
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /companyaddressbook - Get address book
+- GET /companyaddressbook/hiddenmembers - Get hidden members
+- POST /companyaddressbook/hiddenmembers - Add hidden member
+- DELETE /companyaddressbook/hiddenmembers/{accountId} - Remove hidden member
+
+---
+
+## Phase 35: SSO Extensions API
+**Goal**: SSO domain exclusion/inclusion lists
+
+### Steps
+1. Add endpoints to ISsoDomainApi.cs
+2. Create SsoExclusion/Inclusion models
+3. Create tests
+
+### Endpoints
+- GET /ssoDomain/{id}/exclusion - Get exclusion list
+- POST /ssoDomain/{id}/exclusion - Add to exclusion list
+- DELETE /ssoDomain/{id}/exclusion - Remove from exclusion list
+- GET /ssoDomain/{id}/inclusion - Get inclusion list
+- POST /ssoDomain/{id}/inclusion - Add to inclusion list
+- DELETE /ssoDomain/{id}/inclusion - Remove from inclusion list
+
+---
+
+## Phase 36: IoT API
+**Goal**: IoT dashboards, widgets, sensors, and metrics
+
+### Steps
+1. Create IIotApi.cs interface
+2. Create IoT models (Dashboard, Widget, Sensor, Metric)
+3. Wire up in client
+4. Create tests
+
+### Endpoints
+- GET /iot/dashboards - Get dashboards
+- POST /iot/dashboards - Create dashboard
+- GET /iot/dashboards/{id} - Get dashboard
+- PUT /iot/dashboards/{id} - Update dashboard
+- DELETE /iot/dashboards/{id} - Delete dashboard
+- GET /iot/dashboards/{id}/widgets - Get widgets
+- POST /iot/dashboards/{id}/widgets - Create widget
+- GET /iot/device-configurations - Get device configurations
+- POST /iot/device-configurations - Create device configuration
+- GET /iot/edge-modules - Get edge modules
+- GET /iot/LatestData - Get latest IoT data
+- POST /iot/data/push - Push IoT data
 
 ---
 
