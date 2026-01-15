@@ -34,6 +34,17 @@ public class TeamViewerClientTests
 		client.CompanyBranding.Should().NotBeNull();
 		client.SsoDomain.Should().NotBeNull();
 		client.WebConnector.Should().NotBeNull();
+		client.UserGroups.Should().NotBeNull();
+		client.UserRoles.Should().NotBeNull();
+		client.Monitoring.Should().NotBeNull();
+		client.MonitoringPolicy.Should().NotBeNull();
+		client.PatchManagement.Should().NotBeNull();
+		client.EndpointProtection.Should().NotBeNull();
+		client.Chat.Should().NotBeNull();
+		client.ConditionalAccess.Should().NotBeNull();
+		client.Company.Should().NotBeNull();
+		client.CompanyAddressBook.Should().NotBeNull();
+		client.Iot.Should().NotBeNull();
 	}
 
 	[Fact]

@@ -68,6 +68,17 @@ public class TeamViewerClient : ITeamViewerClient
 		CompanyBranding = RestService.For<ICompanyBrandingApi>(_httpClient, refitSettings);
 		SsoDomain = RestService.For<ISsoDomainApi>(_httpClient, refitSettings);
 		WebConnector = RestService.For<IWebConnectorApi>(_httpClient, refitSettings);
+		UserGroups = RestService.For<IUserGroupsApi>(_httpClient, refitSettings);
+		UserRoles = RestService.For<IUserRolesApi>(_httpClient, refitSettings);
+		Monitoring = RestService.For<IMonitoringApi>(_httpClient, refitSettings);
+		MonitoringPolicy = RestService.For<IMonitoringPolicyApi>(_httpClient, refitSettings);
+		PatchManagement = RestService.For<IPatchManagementApi>(_httpClient, refitSettings);
+		EndpointProtection = RestService.For<IEndpointProtectionApi>(_httpClient, refitSettings);
+		Chat = RestService.For<IChatApi>(_httpClient, refitSettings);
+		ConditionalAccess = RestService.For<IConditionalAccessApi>(_httpClient, refitSettings);
+		Company = RestService.For<ICompanyApi>(_httpClient, refitSettings);
+		CompanyAddressBook = RestService.For<ICompanyAddressBookApi>(_httpClient, refitSettings);
+		Iot = RestService.For<IIotApi>(_httpClient, refitSettings);
 	}
 
 	/// <inheritdoc/>
@@ -114,6 +125,39 @@ public class TeamViewerClient : ITeamViewerClient
 
 	/// <inheritdoc/>
 	public IWebConnectorApi WebConnector { get; }
+
+	/// <inheritdoc/>
+	public IUserGroupsApi UserGroups { get; }
+
+	/// <inheritdoc/>
+	public IUserRolesApi UserRoles { get; }
+
+	/// <inheritdoc/>
+	public IMonitoringApi Monitoring { get; }
+
+	/// <inheritdoc/>
+	public IMonitoringPolicyApi MonitoringPolicy { get; }
+
+	/// <inheritdoc/>
+	public IPatchManagementApi PatchManagement { get; }
+
+	/// <inheritdoc/>
+	public IEndpointProtectionApi EndpointProtection { get; }
+
+	/// <inheritdoc/>
+	public IChatApi Chat { get; }
+
+	/// <inheritdoc/>
+	public IConditionalAccessApi ConditionalAccess { get; }
+
+	/// <inheritdoc/>
+	public ICompanyApi Company { get; }
+
+	/// <inheritdoc/>
+	public ICompanyAddressBookApi CompanyAddressBook { get; }
+
+	/// <inheritdoc/>
+	public IIotApi Iot { get; }
 
 	/// <inheritdoc/>
 	public void Dispose()

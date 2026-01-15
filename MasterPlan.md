@@ -428,19 +428,19 @@ TeamViewer.Api/
 | 21 | ✅ Complete | Meeting Extensions |
 | 22 | ✅ Complete | Access Tokens |
 | 23 | ✅ Complete | WebConnector |
-| 24 | ⏳ Pending | User Groups |
-| 25 | ⏳ Pending | User Roles |
-| 26 | ⏳ Pending | Monitoring |
-| 27 | ⏳ Pending | Monitoring Policy |
-| 28 | ⏳ Pending | Patch Management |
-| 29 | ⏳ Pending | Endpoint Protection |
-| 30 | ⏳ Pending | Chat |
-| 31 | ⏳ Pending | Conditional Access |
-| 32 | ⏳ Pending | Reports Extensions |
-| 33 | ⏳ Pending | Company |
-| 34 | ⏳ Pending | Company Address Book |
-| 35 | ⏳ Pending | SSO Extensions |
-| 36 | ⏳ Pending | IoT |
+| 24 | ✅ Complete | User Groups |
+| 25 | ✅ Complete | User Roles |
+| 26 | ✅ Complete | Monitoring |
+| 27 | ✅ Complete | Monitoring Policy |
+| 28 | ✅ Complete | Patch Management |
+| 29 | ✅ Complete | Endpoint Protection |
+| 30 | ✅ Complete | Chat |
+| 31 | ✅ Complete | Conditional Access |
+| 32 | ✅ Complete | Reports Extensions |
+| 33 | ✅ Complete | Company |
+| 34 | ✅ Complete | Company Address Book |
+| 35 | ✅ Complete | SSO Extensions |
+| 36 | ✅ Complete | IoT |
 
 ---
 

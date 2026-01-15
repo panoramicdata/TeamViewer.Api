@@ -79,4 +79,59 @@ public interface ITeamViewerClient : IDisposable
 	/// Gets the WebConnector API for managing WebConnector sessions.
 	/// </summary>
 	IWebConnectorApi WebConnector { get; }
+
+	/// <summary>
+	/// Gets the User Groups API for managing user groups.
+	/// </summary>
+	IUserGroupsApi UserGroups { get; }
+
+	/// <summary>
+	/// Gets the User Roles API for managing user roles.
+	/// </summary>
+	IUserRolesApi UserRoles { get; }
+
+	/// <summary>
+	/// Gets the Monitoring API for device monitoring.
+	/// </summary>
+	IMonitoringApi Monitoring { get; }
+
+	/// <summary>
+	/// Gets the Monitoring Policy API for managing monitoring policies.
+	/// </summary>
+	IMonitoringPolicyApi MonitoringPolicy { get; }
+
+	/// <summary>
+	/// Gets the Patch Management API for patch management.
+	/// </summary>
+	IPatchManagementApi PatchManagement { get; }
+
+	/// <summary>
+	/// Gets the Endpoint Protection API for endpoint protection management.
+	/// </summary>
+	IEndpointProtectionApi EndpointProtection { get; }
+
+	/// <summary>
+	/// Gets the Chat API for TeamViewer chat functionality.
+	/// </summary>
+	IChatApi Chat { get; }
+
+	/// <summary>
+	/// Gets the Conditional Access API for conditional access management.
+	/// </summary>
+	IConditionalAccessApi ConditionalAccess { get; }
+
+	/// <summary>
+	/// Gets the Company API for company information.
+	/// </summary>
+	ICompanyApi Company { get; }
+
+	/// <summary>
+	/// Gets the Company Address Book API for address book management.
+	/// </summary>
+	ICompanyAddressBookApi CompanyAddressBook { get; }
+
+	/// <summary>
+	/// Gets the IoT API for IoT management.
+	/// </summary>
+	IIotApi Iot { get; }
 }
