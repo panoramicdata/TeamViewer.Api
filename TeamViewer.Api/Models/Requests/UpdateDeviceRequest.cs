@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace TeamViewer.Api.Models.Requests;
 
 /// <summary>

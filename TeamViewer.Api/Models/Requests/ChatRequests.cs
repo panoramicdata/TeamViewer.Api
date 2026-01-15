@@ -1,6 +1,3 @@
-using System.Text.Json.Serialization;
-using Refit;
-
 namespace TeamViewer.Api.Models.Requests;
 
 /// <summary>

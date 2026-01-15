@@ -1,0 +1,9 @@
+global using System.Text.Json;
+global using System.Text.Json.Serialization;
+global using Refit;
+global using TeamViewer.Api.Handlers;
+global using TeamViewer.Api.Interfaces;
+global using Microsoft.Extensions.Logging;
+global using Microsoft.Extensions.Logging.Abstractions;
+global using TeamViewer.Api.Models.Requests;
+global using TeamViewer.Api.Models.Responses;

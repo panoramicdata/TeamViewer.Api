@@ -1,6 +1,3 @@
-using Refit;
-using TeamViewer.Api.Models.Responses;
-
 namespace TeamViewer.Api.Interfaces;
 
 /// <summary>

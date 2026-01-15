@@ -169,7 +169,10 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 			{
 				callCount++;
 				if (callCount < 2)
+				{
 					throw new HttpRequestException("Network error");
+				}
+
 				return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
 			})
 		};

@@ -1,10 +1,3 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.Extensions.Logging;
-using Refit;
-using TeamViewer.Api.Handlers;
-using TeamViewer.Api.Interfaces;
-
 namespace TeamViewer.Api;
 
 /// <summary>

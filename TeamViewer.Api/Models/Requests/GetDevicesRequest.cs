@@ -1,5 +1,3 @@
-using Refit;
-
 namespace TeamViewer.Api.Models.Requests;
 
 /// <summary>

@@ -14,8 +14,11 @@
 
 ## NuGet
 *.nupkg
+*.snupkg
 **/[Pp]ackages/*
 !**/[Pp]ackages/build/
+/nupkgs/
+/nuget-key.txt
 
 ## Test Results
 TestResults/

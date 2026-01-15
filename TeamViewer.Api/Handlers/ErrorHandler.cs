@@ -1,5 +1,3 @@
-using System.Net;
-using System.Text.Json;
 using TeamViewer.Api.Exceptions;
 
 namespace TeamViewer.Api.Handlers;
