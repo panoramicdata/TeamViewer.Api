@@ -102,4 +102,15 @@ public interface IGroupsApi
 	Task<GroupShareListResponse> GetSharesAsync(
 		string groupId,
 		CancellationToken cancellationToken);
+
+	/// <summary>
+	/// Gets devices in a specific group.
+	/// </summary>
+	/// <param name="groupId">The group ID (with or without 'g' prefix).</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>A list of devices in the group.</returns>
+	[Get("/groups/{groupId}/devices")]
+	Task<DeviceListResponse> GetDevicesAsync(
+		string groupId,
+		CancellationToken cancellationToken);
 }

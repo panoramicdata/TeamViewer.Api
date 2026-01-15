@@ -33,6 +33,7 @@ public class TeamViewerClientTests
 		client.RemoteManagement.Should().NotBeNull();
 		client.CompanyBranding.Should().NotBeNull();
 		client.SsoDomain.Should().NotBeNull();
+		client.WebConnector.Should().NotBeNull();
 	}
 
 	[Fact]

@@ -410,11 +410,11 @@ TeamViewer.Api/
 | 12 | ✅ Complete | Remote Management |
 | 17 | ✅ Complete | Company Branding |
 | 18 | ✅ Complete | SSO Domains |
-| 19 | ⏳ Pending | User Devices |
-| 20 | ⏳ Pending | Group Devices |
-| 21 | ⏳ Pending | Meeting Extensions |
-| 22 | ⏳ Pending | Access Tokens |
-| 23 | ⏳ Pending | WebConnector |
+| 19 | ✅ Complete | User Devices |
+| 20 | ✅ Complete | Group Devices |
+| 21 | ✅ Complete | Meeting Extensions |
+| 22 | ✅ Complete | Access Tokens |
+| 23 | ✅ Complete | WebConnector |
 
 ---
 

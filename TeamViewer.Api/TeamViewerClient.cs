@@ -67,6 +67,7 @@ public class TeamViewerClient : ITeamViewerClient
 		RemoteManagement = RestService.For<IRemoteManagementApi>(_httpClient, refitSettings);
 		CompanyBranding = RestService.For<ICompanyBrandingApi>(_httpClient, refitSettings);
 		SsoDomain = RestService.For<ISsoDomainApi>(_httpClient, refitSettings);
+		WebConnector = RestService.For<IWebConnectorApi>(_httpClient, refitSettings);
 	}
 
 	/// <inheritdoc/>
@@ -110,6 +111,9 @@ public class TeamViewerClient : ITeamViewerClient
 
 	/// <inheritdoc/>
 	public ISsoDomainApi SsoDomain { get; }
+
+	/// <inheritdoc/>
+	public IWebConnectorApi WebConnector { get; }
 
 	/// <inheritdoc/>
 	public void Dispose()

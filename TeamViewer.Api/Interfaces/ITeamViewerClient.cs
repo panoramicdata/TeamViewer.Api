@@ -74,4 +74,9 @@ public interface ITeamViewerClient : IDisposable
 	/// Gets the SSO Domain API for managing SSO domains.
 	/// </summary>
 	ISsoDomainApi SsoDomain { get; }
+
+	/// <summary>
+	/// Gets the WebConnector API for managing WebConnector sessions.
+	/// </summary>
+	IWebConnectorApi WebConnector { get; }
 }

@@ -65,4 +65,26 @@ public interface IMeetingsApi
 	Task DeleteAsync(
 		string meetingId,
 		CancellationToken cancellationToken);
+
+	/// <summary>
+	/// Gets the invitation email content for a meeting.
+	/// </summary>
+	/// <param name="meetingId">The meeting ID.</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>The meeting invitation.</returns>
+	[Get("/meetings/{meetingId}/invitation")]
+	Task<MeetingInvitation> GetInvitationAsync(
+		string meetingId,
+		CancellationToken cancellationToken);
+
+	/// <summary>
+	/// Gets the participants of a meeting.
+	/// </summary>
+	/// <param name="meetingId">The meeting ID.</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	/// <returns>A list of meeting participants.</returns>
+	[Get("/meetings/{meetingId}/participants")]
+	Task<MeetingParticipantListResponse> GetParticipantsAsync(
+		string meetingId,
+		CancellationToken cancellationToken);
 }
