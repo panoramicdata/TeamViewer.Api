@@ -10,10 +10,10 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="AwesomeAssertions" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.0-preview.4.25258.110" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.0-preview.4.25258.110" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0-preview.4.25258.110" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.0-preview.4.25258.110" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.2" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
 		<PackageReference Include="xunit.v3" Version="2.0.2" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="3.1.0">
