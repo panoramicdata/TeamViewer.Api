@@ -11,6 +11,10 @@
     <File Path="TeamViewer.Api.dic" />
     <File Path="version.json" />
   </Folder>
+  <Folder Name="/Solution Items/Documentation/">
+    <File Path="Documentation/TeamViewer_API_Documentation.html" />
+    <File Path="Documentation/TeamViewer_API_Documentation.pdf" />
+  </Folder>
   <Folder Name="/Solution Items/Github/">
     <File Path=".github/copilot-instructions.md" />
   </Folder>
