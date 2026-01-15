@@ -69,22 +69,22 @@ $ColorCyan = "`e[36m"
 
 function Write-Step {
     param([string]$Message)
-    Write-Host "${ColorCyan}==>${ColorReset} ${Message}" -ForegroundColor Cyan
+    Write-Information "${ColorCyan}==>${ColorReset} ${Message}" -InformationAction Continue
 }
 
 function Write-Success {
     param([string]$Message)
-    Write-Host "${ColorGreen}✓${ColorReset} ${Message}" -ForegroundColor Green
+    Write-Information "${ColorGreen}✓${ColorReset} ${Message}" -InformationAction Continue
 }
 
-function Write-Warning {
+function Write-WarningMessage {
     param([string]$Message)
-    Write-Host "${ColorYellow}⚠${ColorReset} ${Message}" -ForegroundColor Yellow
+    Write-Information "${ColorYellow}⚠${ColorReset} ${Message}" -InformationAction Continue
 }
 
 function Write-ErrorMessage {
     param([string]$Message)
-    Write-Host "${ColorRed}✗${ColorReset} ${Message}" -ForegroundColor Red
+    Write-Information "${ColorRed}✗${ColorReset} ${Message}" -InformationAction Continue
 }
 
 # Function to check if a command exists
@@ -121,7 +121,7 @@ Write-Success "Found $gitVersion"
 $NuGetKeyFile = Join-Path $ScriptDir "nuget-key.txt"
 if (-not (Test-Path $NuGetKeyFile)) {
     Write-ErrorMessage "nuget-key.txt not found in solution root: $ScriptDir"
-    Write-Host "Please create nuget-key.txt with your NuGet API key."
+    Write-Information "Please create nuget-key.txt with your NuGet API key." -InformationAction Continue
     exit 1
 }
 
@@ -147,48 +147,48 @@ if (-not $SkipGitCheck) {
         if ($isGitRepo -eq "true") {
             # Get current branch
             $currentBranch = git rev-parse --abbrev-ref HEAD
-            Write-Host "  Current branch: $currentBranch" -ForegroundColor Gray
+            Write-Information "  Current branch: $currentBranch" -InformationAction Continue
 
             # Check for uncommitted changes
             $gitStatus = git status --porcelain
 
             if ($gitStatus) {
                 Write-ErrorMessage "Git working directory is not clean. Uncommitted changes detected:"
-                Write-Host ""
+                Write-Information "" -InformationAction Continue
                 git status --short
-                Write-Host ""
-                Write-Host "Please commit or stash your changes before publishing." -ForegroundColor Yellow
-                Write-Host "To skip this check, use the -SkipGitCheck parameter (not recommended)." -ForegroundColor Gray
+                Write-Information "" -InformationAction Continue
+                Write-Information "${ColorYellow}Please commit or stash your changes before publishing.${ColorReset}" -InformationAction Continue
+                Write-Information "To skip this check, use the -SkipGitCheck parameter (not recommended)." -InformationAction Continue
                 exit 1
             }
 
             # Check for unpushed commits
             $unpushedCommits = git log origin/$currentBranch..$currentBranch --oneline 2>$null
             if ($unpushedCommits) {
-                Write-Warning "You have unpushed commits:"
-                Write-Host ""
-                Write-Host $unpushedCommits -ForegroundColor Yellow
-                Write-Host ""
-                Write-Host "Consider pushing your changes before publishing." -ForegroundColor Yellow
+                Write-WarningMessage "You have unpushed commits:"
+                Write-Information "" -InformationAction Continue
+                Write-Information "${ColorYellow}$unpushedCommits${ColorReset}" -InformationAction Continue
+                Write-Information "" -InformationAction Continue
+                Write-Information "${ColorYellow}Consider pushing your changes before publishing.${ColorReset}" -InformationAction Continue
 
                 # Prompt user to continue
                 $response = Read-Host "Continue anyway? (y/N)"
                 if ($response -ne 'y' -and $response -ne 'Y') {
-                    Write-Host "Publishing cancelled." -ForegroundColor Yellow
+                    Write-Information "${ColorYellow}Publishing cancelled.${ColorReset}" -InformationAction Continue
                     exit 0
                 }
             }
 
             Write-Success "Git working directory is clean"
         } else {
-            Write-Warning "Not in a Git repository - skipping Git checks"
+            Write-WarningMessage "Not in a Git repository - skipping Git checks"
         }
     } catch {
-        Write-Warning "Could not check Git status: $_"
-        Write-Host "Continuing anyway..." -ForegroundColor Gray
+        Write-WarningMessage "Could not check Git status: $_"
+        Write-Information "Continuing anyway..." -InformationAction Continue
     }
 } else {
-    Write-Warning "Skipping Git working directory check as requested"
+    Write-WarningMessage "Skipping Git working directory check as requested"
 }
 
 # ============================================================================
@@ -202,7 +202,7 @@ try {
     $PackageDir = Join-Path $ScriptDir "nupkgs"
     if (Test-Path $PackageDir) {
         Remove-Item -Path $PackageDir -Recurse -Force
-        Write-Host "  Removed previous nupkgs directory" -ForegroundColor Gray
+        Write-Information "  Removed previous nupkgs directory" -InformationAction Continue
     }
 
     # Run dotnet clean
@@ -210,11 +210,11 @@ try {
     if ($LASTEXITCODE -eq 0) {
         Write-Success "Cleaned previous build artifacts"
     } else {
-        Write-Warning "Clean command returned non-zero exit code"
+        Write-WarningMessage "Clean command returned non-zero exit code"
     }
 } catch {
-    Write-Warning "Failed to clean: $_"
-    Write-Host "Continuing anyway..." -ForegroundColor Gray
+    Write-WarningMessage "Failed to clean: $_"
+    Write-Information "Continuing anyway..." -InformationAction Continue
 }
 
 # ============================================================================
@@ -268,8 +268,8 @@ if (-not $SkipTests) {
             Write-Success "All tests passed"
         } else {
             Write-ErrorMessage "Tests failed"
-            Write-Host ""
-            Write-Host "To skip tests and publish anyway, run with -SkipTests parameter" -ForegroundColor Yellow
+            Write-Information "" -InformationAction Continue
+            Write-Information "${ColorYellow}To skip tests and publish anyway, run with -SkipTests parameter${ColorReset}" -InformationAction Continue
             exit 1
         }
     } catch {
@@ -277,7 +277,7 @@ if (-not $SkipTests) {
         exit 1
     }
 } else {
-    Write-Warning "Skipping unit tests as requested"
+    Write-WarningMessage "Skipping unit tests as requested"
 }
 
 # ============================================================================
@@ -308,35 +308,35 @@ $PackageDir = Join-Path $ScriptDir "nupkgs"
 $NuGetPackages = Get-ChildItem -Path $PackageDir -Filter "*.nupkg" -Exclude "*.symbols.nupkg"
 $SymbolPackages = Get-ChildItem -Path $PackageDir -Filter "*.snupkg"
 
-Write-Host ""
+Write-Information "" -InformationAction Continue
 Write-Step "Created packages:"
 foreach ($package in $NuGetPackages) {
-    Write-Host "  📦 $($package.Name)" -ForegroundColor White
+    Write-Information "  📦 $($package.Name)" -InformationAction Continue
 }
 foreach ($package in $SymbolPackages) {
-    Write-Host "  🔍 $($package.Name)" -ForegroundColor Gray
+    Write-Information "  🔍 $($package.Name)" -InformationAction Continue
 }
-Write-Host ""
+Write-Information "" -InformationAction Continue
 
 # ============================================================================
 # Step 9: Publish to NuGet
 # ============================================================================
 
 if ($DryRun) {
-    Write-Warning "DRY RUN MODE: Skipping publish to NuGet"
-    Write-Host ""
-    Write-Host "Packages are ready in: $PackageDir"
-    Write-Host "To publish, run without -DryRun parameter"
+    Write-WarningMessage "DRY RUN MODE: Skipping publish to NuGet"
+    Write-Information "" -InformationAction Continue
+    Write-Information "Packages are ready in: $PackageDir" -InformationAction Continue
+    Write-Information "To publish, run without -DryRun parameter" -InformationAction Continue
     exit 0
 }
 
 Write-Step "Publishing packages to NuGet ($NuGetSource)..."
-Write-Host ""
+Write-Information "" -InformationAction Continue
 
 $publishSuccess = $true
 
 foreach ($package in $NuGetPackages) {
-    Write-Host "Publishing: $($package.Name)" -ForegroundColor Cyan
+    Write-Information "${ColorCyan}Publishing: $($package.Name)${ColorReset}" -InformationAction Continue
 
     try {
         dotnet nuget push $package.FullName `
@@ -355,25 +355,25 @@ foreach ($package in $NuGetPackages) {
         $publishSuccess = $false
     }
 
-    Write-Host ""
+    Write-Information "" -InformationAction Continue
 }
 
 # ============================================================================
 # Summary
 # ============================================================================
 
-Write-Host ""
-Write-Host "============================================" -ForegroundColor Cyan
+Write-Information "" -InformationAction Continue
+Write-Information "${ColorCyan}============================================${ColorReset}" -InformationAction Continue
 if ($publishSuccess) {
     Write-Success "Publish completed successfully!"
-    Write-Host ""
-    Write-Host "Your packages have been published to NuGet." -ForegroundColor Green
-    Write-Host "It may take a few minutes for them to appear in search results." -ForegroundColor Gray
+    Write-Information "" -InformationAction Continue
+    Write-Information "${ColorGreen}Your packages have been published to NuGet.${ColorReset}" -InformationAction Continue
+    Write-Information "It may take a few minutes for them to appear in search results." -InformationAction Continue
 } else {
     Write-ErrorMessage "Publish completed with errors"
-    Write-Host ""
-    Write-Host "Some packages failed to publish. Please review the errors above." -ForegroundColor Yellow
+    Write-Information "" -InformationAction Continue
+    Write-Information "${ColorYellow}Some packages failed to publish. Please review the errors above.${ColorReset}" -InformationAction Continue
     exit 1
 }
-Write-Host "============================================" -ForegroundColor Cyan
-Write-Host ""
+Write-Information "${ColorCyan}============================================${ColorReset}" -InformationAction Continue
+Write-Information "" -InformationAction Continue
