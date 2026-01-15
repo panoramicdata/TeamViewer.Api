@@ -15,7 +15,8 @@ public interface IPoliciesApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of policies.</returns>
 	[Get("/teamviewerpolicies")]
-	Task<PolicyListResponse> GetPoliciesAsync(CancellationToken cancellationToken);
+	Task<PolicyListResponse> GetAsync(
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a specific policy by ID.
@@ -24,5 +25,7 @@ public interface IPoliciesApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The policy.</returns>
 	[Get("/teamviewerpolicies/{policyId}")]
-	Task<Policy> GetPolicyAsync(string policyId, CancellationToken cancellationToken);
+	Task<Policy> GetAsync(
+		string policyId,
+		CancellationToken cancellationToken);
 }

@@ -33,10 +33,14 @@ var options = new TeamViewerClientOptions
 using var client = new TeamViewerClient(options);
 
 // Test connectivity
-var ping = await client.Ping.PingAsync(cancellationToken);
+var ping = await client
+	.Ping
+	.PingAsync(cancellationToken);
 
 // Get account information
-var account = await client.Account.GetAccountAsync(cancellationToken);
+var account = await client
+	.Account
+	.GetAsync(cancellationToken);
 
 // List users
 var users = await client.Users.GetUsersAsync(new GetUsersRequest(), cancellationToken);
@@ -46,7 +50,9 @@ foreach (var user in users.Users)
 }
 
 // List devices
-var devices = await client.Devices.GetDevicesAsync(new GetDevicesRequest(), cancellationToken);
+var devices = await client
+	.Devices
+	.GetAsync(new GetDevicesRequest(), cancellationToken);
 foreach (var device in devices.Devices)
 {
     Console.WriteLine(device.Alias);

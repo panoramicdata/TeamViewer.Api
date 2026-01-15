@@ -13,7 +13,7 @@ public class PoliciesApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 		try
 		{
 			// Act
-			var result = await Client.Policies.GetPoliciesAsync(CancellationToken);
+			var result = await Client.Policies.GetAsync(CancellationToken);
 
 			// Assert
 			result.Should().NotBeNull();
@@ -31,7 +31,7 @@ public class PoliciesApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 		try
 		{
 			// First get a list of policies to find a valid ID
-			var policies = await Client.Policies.GetPoliciesAsync(CancellationToken);
+			var policies = await Client.Policies.GetAsync(CancellationToken);
 
 			if (policies.Policies.Count == 0)
 			{
@@ -42,7 +42,7 @@ public class PoliciesApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 			var policyId = policies.Policies[0].PolicyId!;
 
 			// Act
-			var result = await Client.Policies.GetPolicyAsync(policyId, CancellationToken);
+			var result = await Client.Policies.GetAsync(policyId, CancellationToken);
 
 			// Assert
 			result.Should().NotBeNull();

@@ -11,7 +11,7 @@ public class MeetingsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 	public async Task GetMeetingsAsync_ReturnsMeetingList()
 	{
 		// Act
-		var result = await Client.Meetings.GetMeetingsAsync(new GetMeetingsRequest(), CancellationToken);
+		var result = await Client.Meetings.GetAsync(new GetMeetingsRequest(), CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -35,7 +35,7 @@ public class MeetingsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 				End = endTime
 			};
 
-			var createdMeeting = await Client.Meetings.CreateMeetingAsync(createRequest, CancellationToken);
+			var createdMeeting = await Client.Meetings.CreateAsync(createRequest, CancellationToken);
 
 			// Assert - Created
 			createdMeeting.Should().NotBeNull();
@@ -43,15 +43,15 @@ public class MeetingsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 			createdMeeting.Subject.Should().Be(testSubject);
 
 			// Get meeting to verify
-			var meeting = await Client.Meetings.GetMeetingAsync(createdMeeting.MeetingId!, CancellationToken);
+			var meeting = await Client.Meetings.GetAsync(createdMeeting.MeetingId!, CancellationToken);
 			meeting.Should().NotBeNull();
 			meeting.MeetingId.Should().Be(createdMeeting.MeetingId);
 
 			// Clean up
-			await Client.Meetings.DeleteMeetingAsync(createdMeeting.MeetingId!, CancellationToken);
+			await Client.Meetings.DeleteAsync(createdMeeting.MeetingId!, CancellationToken);
 
 			// Verify deletion
-			var meetings = await Client.Meetings.GetMeetingsAsync(new GetMeetingsRequest(), CancellationToken);
+			var meetings = await Client.Meetings.GetAsync(new GetMeetingsRequest(), CancellationToken);
 			meetings.Meetings.Should().NotContain(m => m.MeetingId == createdMeeting.MeetingId);
 		}
 		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_request") || ex.Message.Contains("permission") || ex.Message.Contains("not_found"))
@@ -71,7 +71,7 @@ public class MeetingsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 		try
 		{
 			// Create meeting
-			var createdMeeting = await Client.Meetings.CreateMeetingAsync(
+			var createdMeeting = await Client.Meetings.CreateAsync(
 				new CreateMeetingRequest
 				{
 					Subject = testSubject,
@@ -83,18 +83,18 @@ public class MeetingsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 			try
 			{
 				// Act - Update
-				await Client.Meetings.UpdateMeetingAsync(
+				await Client.Meetings.UpdateAsync(
 					createdMeeting.MeetingId!,
 					new UpdateMeetingRequest { Subject = updatedSubject },
 					CancellationToken);
 
 				// Verify update
-				var meeting = await Client.Meetings.GetMeetingAsync(createdMeeting.MeetingId!, CancellationToken);
+				var meeting = await Client.Meetings.GetAsync(createdMeeting.MeetingId!, CancellationToken);
 				meeting.Subject.Should().Be(updatedSubject);
 			}
 			finally
 			{
-				await Client.Meetings.DeleteMeetingAsync(createdMeeting.MeetingId!, CancellationToken);
+				await Client.Meetings.DeleteAsync(createdMeeting.MeetingId!, CancellationToken);
 			}
 		}
 		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_request") || ex.Message.Contains("permission") || ex.Message.Contains("not_found"))

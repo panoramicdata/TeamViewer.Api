@@ -15,7 +15,8 @@ public interface ICompanyBrandingApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The company branding settings.</returns>
 	[Get("/companybranding")]
-	Task<CompanyBranding> GetCompanyBrandingAsync(CancellationToken cancellationToken);
+	Task<CompanyBranding> GetAsync(
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Updates the company branding settings.
@@ -24,5 +25,7 @@ public interface ICompanyBrandingApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Put("/companybranding")]
-	Task UpdateCompanyBrandingAsync([Body] UpdateCompanyBrandingRequest request, CancellationToken cancellationToken);
+	Task UpdateAsync(
+		[Body] UpdateCompanyBrandingRequest request,
+		CancellationToken cancellationToken);
 }

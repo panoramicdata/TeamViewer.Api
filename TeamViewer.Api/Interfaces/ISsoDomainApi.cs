@@ -15,7 +15,8 @@ public interface ISsoDomainApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of SSO domains.</returns>
 	[Get("/ssoDomain")]
-	Task<SsoDomainListResponse> GetSsoDomainsAsync(CancellationToken cancellationToken);
+	Task<SsoDomainListResponse> GetAsync(
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Creates a new SSO domain.
@@ -24,7 +25,9 @@ public interface ISsoDomainApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The created SSO domain.</returns>
 	[Post("/ssoDomain")]
-	Task<SsoDomain> CreateSsoDomainAsync([Body] CreateSsoDomainRequest request, CancellationToken cancellationToken);
+	Task<SsoDomain> CreateAsync(
+		[Body] CreateSsoDomainRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Deletes an SSO domain.
@@ -33,7 +36,9 @@ public interface ISsoDomainApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Delete("/ssoDomain/{domainId}")]
-	Task DeleteSsoDomainAsync(string domainId, CancellationToken cancellationToken);
+	Task DeleteAsync(
+		string domainId,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Verifies an SSO domain.
@@ -42,5 +47,7 @@ public interface ISsoDomainApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Post("/ssoDomain/{domainId}/verify")]
-	Task VerifySsoDomainAsync(string domainId, CancellationToken cancellationToken);
+	Task VerifyAsync(
+		string domainId,
+		CancellationToken cancellationToken);
 }

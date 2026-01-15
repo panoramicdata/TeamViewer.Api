@@ -10,7 +10,7 @@ public class GroupsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testO
 	{
 		// Create a test group first
 		var testGroupName = $"{TestPrefix}GetGroups_{DateTime.UtcNow:HHmmss}";
-		var createdGroup = await Client.Groups.CreateGroupAsync(
+		var createdGroup = await Client.Groups.CreateAsync(
 			new CreateGroupRequest { Name = testGroupName },
 			CancellationToken);
 
@@ -26,7 +26,7 @@ public class GroupsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testO
 		}
 		finally
 		{
-			await Client.Groups.DeleteGroupAsync(createdGroup.Id!, CancellationToken);
+			await Client.Groups.DeleteAsync(createdGroup.Id!, CancellationToken);
 		}
 	}
 
@@ -35,7 +35,7 @@ public class GroupsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testO
 	{
 		// Create a test group first
 		var testGroupName = $"{TestPrefix}NameFilter_{DateTime.UtcNow:HHmmss}";
-		var createdGroup = await Client.Groups.CreateGroupAsync(
+		var createdGroup = await Client.Groups.CreateAsync(
 			new CreateGroupRequest { Name = testGroupName },
 			CancellationToken);
 
@@ -53,7 +53,7 @@ public class GroupsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testO
 		}
 		finally
 		{
-			await Client.Groups.DeleteGroupAsync(createdGroup.Id!, CancellationToken);
+			await Client.Groups.DeleteAsync(createdGroup.Id!, CancellationToken);
 		}
 	}
 
@@ -62,14 +62,14 @@ public class GroupsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testO
 	{
 		// Create a test group first
 		var testGroupName = $"{TestPrefix}GetById_{DateTime.UtcNow:HHmmss}";
-		var createdGroup = await Client.Groups.CreateGroupAsync(
+		var createdGroup = await Client.Groups.CreateAsync(
 			new CreateGroupRequest { Name = testGroupName },
 			CancellationToken);
 
 		try
 		{
 			// Act
-			var result = await Client.Groups.GetGroupAsync(createdGroup.Id!, CancellationToken);
+			var result = await Client.Groups.GetAsync(createdGroup.Id!, CancellationToken);
 
 			// Assert
 			result.Should().NotBeNull();
@@ -78,7 +78,7 @@ public class GroupsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testO
 		}
 		finally
 		{
-			await Client.Groups.DeleteGroupAsync(createdGroup.Id!, CancellationToken);
+			await Client.Groups.DeleteAsync(createdGroup.Id!, CancellationToken);
 		}
 	}
 
@@ -88,7 +88,7 @@ public class GroupsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testO
 		var testGroupName = $"{TestPrefix}CRUD_{DateTime.UtcNow:HHmmss}";
 
 		// Act - Create
-		var createdGroup = await Client.Groups.CreateGroupAsync(
+		var createdGroup = await Client.Groups.CreateAsync(
 			new CreateGroupRequest { Name = testGroupName },
 			CancellationToken);
 
@@ -98,7 +98,7 @@ public class GroupsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testO
 		createdGroup.Name.Should().Be(testGroupName);
 
 		// Act - Delete
-		await Client.Groups.DeleteGroupAsync(createdGroup.Id!, CancellationToken);
+		await Client.Groups.DeleteAsync(createdGroup.Id!, CancellationToken);
 
 		// Verify deletion
 		var groups = await Client.Groups.GetAsync(
@@ -114,25 +114,25 @@ public class GroupsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testO
 		var updatedGroupName = $"{TestPrefix}Updated_{DateTime.UtcNow:HHmmss}";
 
 		// Create a test group
-		var createdGroup = await Client.Groups.CreateGroupAsync(
+		var createdGroup = await Client.Groups.CreateAsync(
 			new CreateGroupRequest { Name = testGroupName },
 			CancellationToken);
 
 		try
 		{
 			// Act - Update
-			await Client.Groups.UpdateGroupAsync(
+			await Client.Groups.UpdateAsync(
 				createdGroup.Id!,
 				new UpdateGroupRequest { Name = updatedGroupName },
 				CancellationToken);
 
 			// Verify update
-			var updatedGroup = await Client.Groups.GetGroupAsync(createdGroup.Id!, CancellationToken);
+			var updatedGroup = await Client.Groups.GetAsync(createdGroup.Id!, CancellationToken);
 			updatedGroup.Name.Should().Be(updatedGroupName);
 		}
 		finally
 		{
-			await Client.Groups.DeleteGroupAsync(createdGroup.Id!, CancellationToken);
+			await Client.Groups.DeleteAsync(createdGroup.Id!, CancellationToken);
 		}
 	}
 }

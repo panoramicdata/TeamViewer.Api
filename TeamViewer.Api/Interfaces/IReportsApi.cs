@@ -16,7 +16,9 @@ public interface IReportsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of connection reports.</returns>
 	[Get("/reports/connections")]
-	Task<ConnectionReportListResponse> GetConnectionReportsAsync([Query] GetConnectionReportsRequest request, CancellationToken cancellationToken);
+	Task<ConnectionReportListResponse> GetConnectionReportsAsync(
+		[Query] GetConnectionReportsRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a specific connection report by ID.
@@ -25,5 +27,7 @@ public interface IReportsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The connection report.</returns>
 	[Get("/reports/connections/{reportId}")]
-	Task<ConnectionReport> GetConnectionReportAsync(string reportId, CancellationToken cancellationToken);
+	Task<ConnectionReport> GetConnectionReportAsync(
+		string reportId,
+		CancellationToken cancellationToken);
 }

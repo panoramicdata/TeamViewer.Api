@@ -16,7 +16,9 @@ public interface IDevicesApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of devices.</returns>
 	[Get("/devices")]
-	Task<DeviceListResponse> GetDevicesAsync([Query] GetDevicesRequest request, CancellationToken cancellationToken);
+	Task<DeviceListResponse> GetAsync(
+		[Query] GetDevicesRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a specific device by ID.
@@ -25,7 +27,9 @@ public interface IDevicesApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The device.</returns>
 	[Get("/devices/{deviceId}")]
-	Task<Device> GetDeviceAsync(string deviceId, CancellationToken cancellationToken);
+	Task<Device> GetAsync(
+		string deviceId,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Updates an existing device.
@@ -35,7 +39,10 @@ public interface IDevicesApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Put("/devices/{deviceId}")]
-	Task UpdateDeviceAsync(string deviceId, [Body] UpdateDeviceRequest request, CancellationToken cancellationToken);
+	Task UpdateAsync(
+		string deviceId,
+		[Body] UpdateDeviceRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Deletes a device from Computers &amp; Contacts.
@@ -44,5 +51,7 @@ public interface IDevicesApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Delete("/devices/{deviceId}")]
-	Task DeleteDeviceAsync(string deviceId, CancellationToken cancellationToken);
+	Task DeleteAsync(
+		string deviceId,
+		CancellationToken cancellationToken);
 }

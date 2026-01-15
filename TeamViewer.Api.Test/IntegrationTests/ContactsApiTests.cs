@@ -11,7 +11,7 @@ public class ContactsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 	public async Task GetContactsAsync_ReturnsContactList()
 	{
 		// Act
-		var result = await Client.Contacts.GetContactsAsync(CancellationToken);
+		var result = await Client.Contacts.GetAsync(CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -32,19 +32,19 @@ public class ContactsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 				Email = testEmail
 			};
 
-			var createdContact = await Client.Contacts.InviteContactAsync(inviteRequest, CancellationToken);
+			var createdContact = await Client.Contacts.InviteAsync(inviteRequest, CancellationToken);
 
 			// Assert - Created
 			createdContact.Should().NotBeNull();
 			createdContact.ContactId.Should().NotBeNullOrEmpty();
 
 			// Get contact to verify
-			var contact = await Client.Contacts.GetContactAsync(createdContact.ContactId!, CancellationToken);
+			var contact = await Client.Contacts.GetAsync(createdContact.ContactId!, CancellationToken);
 			contact.Should().NotBeNull();
 			contact.ContactId.Should().Be(createdContact.ContactId);
 
 			// Clean up
-			await Client.Contacts.DeleteContactAsync(createdContact.ContactId!, CancellationToken);
+			await Client.Contacts.DeleteAsync(createdContact.ContactId!, CancellationToken);
 		}
 		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_request") || ex.Message.Contains("permission") || ex.Message.Contains("already"))
 		{

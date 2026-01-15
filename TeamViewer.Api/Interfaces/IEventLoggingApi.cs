@@ -16,5 +16,7 @@ public interface IEventLoggingApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of audit events.</returns>
 	[Post("/EventLogging")]
-	Task<EventLoggingResponse> GetEventsAsync([Body] EventLoggingRequest request, CancellationToken cancellationToken);
+	Task<EventLoggingResponse> GetAsync(
+		[Body] EventLoggingRequest request,
+		CancellationToken cancellationToken);
 }

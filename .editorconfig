@@ -25,8 +25,8 @@ csharp_preserve_single_line_statements = false
 csharp_preserve_single_line_blocks = true
 
 [*.{json,xml,csproj,props,targets}]
-indent_style = space
-indent_size = 2
+indent_style = tab
+indent_size = 4
 
 [*.md]
 trim_trailing_whitespace = false

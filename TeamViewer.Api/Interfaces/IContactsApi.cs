@@ -15,7 +15,8 @@ public interface IContactsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of contacts.</returns>
 	[Get("/contacts")]
-	Task<ContactListResponse> GetContactsAsync(CancellationToken cancellationToken);
+	Task<ContactListResponse> GetAsync(
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a specific contact by ID.
@@ -24,7 +25,9 @@ public interface IContactsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The contact.</returns>
 	[Get("/contacts/{contactId}")]
-	Task<Contact> GetContactAsync(string contactId, CancellationToken cancellationToken);
+	Task<Contact> GetAsync(
+		string contactId,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Invites a contact by email.
@@ -33,7 +36,9 @@ public interface IContactsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The created contact.</returns>
 	[Post("/contacts")]
-	Task<Contact> InviteContactAsync([Body] InviteContactRequest request, CancellationToken cancellationToken);
+	Task<Contact> InviteAsync(
+		[Body] InviteContactRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Deletes a contact.
@@ -42,5 +47,7 @@ public interface IContactsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Delete("/contacts/{contactId}")]
-	Task DeleteContactAsync(string contactId, CancellationToken cancellationToken);
+	Task DeleteAsync(
+		string contactId,
+		CancellationToken cancellationToken);
 }

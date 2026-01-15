@@ -13,7 +13,7 @@ public class SsoDomainApiTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 		try
 		{
 			// Act
-			var result = await Client.SsoDomain.GetSsoDomainsAsync(CancellationToken);
+			var result = await Client.SsoDomain.GetAsync(CancellationToken);
 
 			// Assert
 			result.Should().NotBeNull();
@@ -34,7 +34,7 @@ public class SsoDomainApiTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 		try
 		{
 			// Act - Create
-			var createdDomain = await Client.SsoDomain.CreateSsoDomainAsync(
+			var createdDomain = await Client.SsoDomain.CreateAsync(
 				new CreateSsoDomainRequest { DomainName = testDomain },
 				CancellationToken);
 
@@ -44,10 +44,10 @@ public class SsoDomainApiTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 			createdDomain.DomainName.Should().Be(testDomain);
 
 			// Clean up
-			await Client.SsoDomain.DeleteSsoDomainAsync(createdDomain.DomainId!, CancellationToken);
+			await Client.SsoDomain.DeleteAsync(createdDomain.DomainId!, CancellationToken);
 
 			// Verify deletion
-			var domains = await Client.SsoDomain.GetSsoDomainsAsync(CancellationToken);
+			var domains = await Client.SsoDomain.GetAsync(CancellationToken);
 			domains.Domains.Should().NotContain(d => d.DomainId == createdDomain.DomainId);
 		}
 		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_token") || ex.Message.Contains("permission") || ex.Message.Contains("not_found") || ex.Message.Contains("invalid_request") || ex.Message.Contains("unknown"))

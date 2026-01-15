@@ -15,7 +15,8 @@ public interface ISessionsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of sessions.</returns>
 	[Get("/sessions")]
-	Task<SessionListResponse> GetSessionsAsync(CancellationToken cancellationToken);
+	Task<SessionListResponse> GetAsync(
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a specific session by code.
@@ -24,7 +25,9 @@ public interface ISessionsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The session.</returns>
 	[Get("/sessions/{sessionCode}")]
-	Task<Session> GetSessionAsync(string sessionCode, CancellationToken cancellationToken);
+	Task<Session> GetAsync(
+		string sessionCode,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Creates a new session code.
@@ -33,7 +36,9 @@ public interface ISessionsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The created session.</returns>
 	[Post("/sessions")]
-	Task<Session> CreateSessionAsync([Body] CreateSessionRequest request, CancellationToken cancellationToken);
+	Task<Session> CreateAsync(
+		[Body] CreateSessionRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Modifies an existing session code.
@@ -43,7 +48,10 @@ public interface ISessionsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Put("/sessions/{sessionCode}")]
-	Task UpdateSessionAsync(string sessionCode, [Body] UpdateSessionRequest request, CancellationToken cancellationToken);
+	Task UpdateAsync(
+		string sessionCode,
+		[Body] UpdateSessionRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Deletes a session code.
@@ -52,5 +60,7 @@ public interface ISessionsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Delete("/sessions/{sessionCode}")]
-	Task DeleteSessionAsync(string sessionCode, CancellationToken cancellationToken);
+	Task DeleteAsync(
+		string sessionCode,
+		CancellationToken cancellationToken);
 }

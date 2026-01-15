@@ -13,7 +13,7 @@ public class CompanyBrandingApiTests(ITestOutputHelper testOutputHelper) : BaseT
 		try
 		{
 			// Act
-			var result = await Client.CompanyBranding.GetCompanyBrandingAsync(CancellationToken);
+			var result = await Client.CompanyBranding.GetAsync(CancellationToken);
 
 			// Assert
 			result.Should().NotBeNull();
@@ -30,12 +30,12 @@ public class CompanyBrandingApiTests(ITestOutputHelper testOutputHelper) : BaseT
 		try
 		{
 			// Get current branding to preserve values
-			var currentBranding = await Client.CompanyBranding.GetCompanyBrandingAsync(CancellationToken);
+			var currentBranding = await Client.CompanyBranding.GetAsync(CancellationToken);
 
 			var testSupportText = $"{TestPrefix}Support_{DateTime.UtcNow:HHmmss}";
 
 			// Act - Update
-			await Client.CompanyBranding.UpdateCompanyBrandingAsync(
+			await Client.CompanyBranding.UpdateAsync(
 				new UpdateCompanyBrandingRequest
 				{
 					SupportText = testSupportText
@@ -43,11 +43,11 @@ public class CompanyBrandingApiTests(ITestOutputHelper testOutputHelper) : BaseT
 				CancellationToken);
 
 			// Verify
-			var updatedBranding = await Client.CompanyBranding.GetCompanyBrandingAsync(CancellationToken);
+			var updatedBranding = await Client.CompanyBranding.GetAsync(CancellationToken);
 			updatedBranding.SupportText.Should().Be(testSupportText);
 
 			// Restore original
-			await Client.CompanyBranding.UpdateCompanyBrandingAsync(
+			await Client.CompanyBranding.UpdateAsync(
 				new UpdateCompanyBrandingRequest
 				{
 					SupportText = currentBranding.SupportText

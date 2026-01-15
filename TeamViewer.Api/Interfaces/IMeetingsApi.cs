@@ -16,7 +16,9 @@ public interface IMeetingsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of meetings.</returns>
 	[Get("/meetings")]
-	Task<MeetingListResponse> GetMeetingsAsync([Query] GetMeetingsRequest request, CancellationToken cancellationToken);
+	Task<MeetingListResponse> GetAsync(
+		[Query] GetMeetingsRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a specific meeting by ID.
@@ -25,7 +27,9 @@ public interface IMeetingsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The meeting.</returns>
 	[Get("/meetings/{meetingId}")]
-	Task<Meeting> GetMeetingAsync(string meetingId, CancellationToken cancellationToken);
+	Task<Meeting> GetAsync(
+		string meetingId,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Creates a new meeting.
@@ -34,7 +38,9 @@ public interface IMeetingsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The created meeting.</returns>
 	[Post("/meetings")]
-	Task<Meeting> CreateMeetingAsync([Body] CreateMeetingRequest request, CancellationToken cancellationToken);
+	Task<Meeting> CreateAsync(
+		[Body] CreateMeetingRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Updates an existing meeting.
@@ -44,7 +50,10 @@ public interface IMeetingsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Put("/meetings/{meetingId}")]
-	Task UpdateMeetingAsync(string meetingId, [Body] UpdateMeetingRequest request, CancellationToken cancellationToken);
+	Task UpdateAsync(
+		string meetingId,
+		[Body] UpdateMeetingRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Deletes a meeting.
@@ -53,5 +62,7 @@ public interface IMeetingsApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Delete("/meetings/{meetingId}")]
-	Task DeleteMeetingAsync(string meetingId, CancellationToken cancellationToken);
+	Task DeleteAsync(
+		string meetingId,
+		CancellationToken cancellationToken);
 }

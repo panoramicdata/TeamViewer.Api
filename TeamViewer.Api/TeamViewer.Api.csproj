@@ -1,35 +1,35 @@
 <Project Sdk="Microsoft.NET.Sdk">
-<PropertyGroup>
-  <TargetFramework>net10.0</TargetFramework>
-  <ImplicitUsings>enable</ImplicitUsings>
-  <Nullable>enable</Nullable>
-  <LangVersion>latest</LangVersion>
-  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  
-  <!-- Package Metadata -->
-  <PackageId>TeamViewer.Api</PackageId>
-  <Authors>Panoramic Data Limited</Authors>
-  <Company>Panoramic Data Limited</Company>
-  <Copyright>Copyright (c) Panoramic Data Limited 2025</Copyright>
-  <Description>A comprehensive .NET library for the TeamViewer REST API. Provides full API coverage including Users, Groups, Devices, Sessions, Meetings, Reports, Policies, and Remote Management.</Description>
-  <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  <PackageProjectUrl>https://github.com/panoramicdata/TeamViewer.Api</PackageProjectUrl>
-  <RepositoryUrl>https://github.com/panoramicdata/TeamViewer.Api</RepositoryUrl>
-  <RepositoryType>git</RepositoryType>
-  <PackageTags>TeamViewer;API;REST;Remote;Desktop;Support;Remote-Management;IT;MSP</PackageTags>
-  <PackageReadmeFile>README.md</PackageReadmeFile>
-  <PackageIcon>Logo.png</PackageIcon>
-  <PackageReleaseNotes>Initial release with full TeamViewer API coverage.</PackageReleaseNotes>
-</PropertyGroup>
-<ItemGroup>
-  <None Include="..\README.md" Pack="true" PackagePath="\" />
-  <None Include="Logo.png" Pack="true" PackagePath="\" />
-</ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0-preview.4.25258.110" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0-preview.4.25258.110" />
-    <PackageReference Include="Refit" Version="8.0.0" />
-    <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+		<!-- Package Metadata -->
+		<PackageId>TeamViewer.Api</PackageId>
+		<Authors>Panoramic Data Limited</Authors>
+		<Company>Panoramic Data Limited</Company>
+		<Copyright>Copyright (c) Panoramic Data Limited 2025</Copyright>
+		<Description>A comprehensive .NET library for the TeamViewer REST API. Provides full API coverage including Users, Groups, Devices, Sessions, Meetings, Reports, Policies, and Remote Management.</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/panoramicdata/TeamViewer.Api</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/panoramicdata/TeamViewer.Api</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>TeamViewer;API;REST;Remote;Desktop;Support;Remote-Management;IT;MSP</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>Logo.png</PackageIcon>
+		<PackageReleaseNotes>Initial release with full TeamViewer API coverage.</PackageReleaseNotes>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\" />
+		<None Include="Logo.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0-preview.4.25258.110" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0-preview.4.25258.110" />
+		<PackageReference Include="Refit" Version="8.0.0" />
+		<PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
+	</ItemGroup>
 </Project>

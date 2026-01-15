@@ -13,7 +13,7 @@ public class UsersApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOu
 		// Act
 		var result = await Client
 			.Users
-			.GetUsersAsync(new GetUsersRequest(), CancellationToken);
+			.GetAsync(new GetUsersRequest(), CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -28,7 +28,7 @@ public class UsersApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOu
 		// Act
 		var result = await Client
 			.Users
-			.GetUsersAsync(new GetUsersRequest { Full = true }, CancellationToken);
+			.GetAsync(new GetUsersRequest { Full = true }, CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -43,7 +43,7 @@ public class UsersApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOu
 		// Act
 		var result = await Client
 			.Users
-			.GetUsersAsync(new GetUsersRequest { Name = "test" }, CancellationToken);
+			.GetAsync(new GetUsersRequest { Name = "test" }, CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -58,7 +58,7 @@ public class UsersApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOu
 		// First get a list of users to find a valid email
 		var users = await Client
 			.Users
-			.GetUsersAsync(new GetUsersRequest(), CancellationToken);
+			.GetAsync(new GetUsersRequest(), CancellationToken);
 
 		if (users.Users.Count == 0 || string.IsNullOrEmpty(users.Users[0].Email))
 		{
@@ -71,7 +71,7 @@ public class UsersApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOu
 		// Act
 		var result = await Client
 			.Users
-			.GetUsersAsync(new GetUsersRequest { Email = email }, CancellationToken);
+			.GetAsync(new GetUsersRequest { Email = email }, CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -87,7 +87,7 @@ public class UsersApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOu
 		// First get a list of users to find a valid ID
 		var users = await Client
 			.Users
-			.GetUsersAsync(new GetUsersRequest(), CancellationToken);
+			.GetAsync(new GetUsersRequest(), CancellationToken);
 
 		if (users.Users.Count == 0)
 		{
@@ -100,7 +100,7 @@ public class UsersApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOu
 		// Act
 		var result = await Client
 			.Users
-			.GetUserAsync(userId, CancellationToken);
+			.GetAsync(userId, CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();

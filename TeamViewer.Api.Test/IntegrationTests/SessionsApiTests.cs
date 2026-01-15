@@ -11,7 +11,7 @@ public class SessionsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 	public async Task GetSessionsAsync_ReturnsSessionList()
 	{
 		// Act
-		var result = await Client.Sessions.GetSessionsAsync(CancellationToken);
+		var result = await Client.Sessions.GetAsync(CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();
@@ -23,7 +23,7 @@ public class SessionsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 	{
 		// First get a group to assign the session to
 		var testGroupName = $"{TestPrefix}SessionGroup_{DateTime.UtcNow:HHmmss}";
-		var group = await Client.Groups.CreateGroupAsync(
+		var group = await Client.Groups.CreateAsync(
 			new CreateGroupRequest { Name = testGroupName },
 			CancellationToken);
 
@@ -37,19 +37,19 @@ public class SessionsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 				EndCustomer = "Test Customer"
 			};
 
-			var createdSession = await Client.Sessions.CreateSessionAsync(createRequest, CancellationToken);
+			var createdSession = await Client.Sessions.CreateAsync(createRequest, CancellationToken);
 
 			// Assert - Created
 			createdSession.Should().NotBeNull();
 			createdSession.Code.Should().NotBeNullOrEmpty();
 
 			// Get session to verify
-			var session = await Client.Sessions.GetSessionAsync(createdSession.Code!, CancellationToken);
+			var session = await Client.Sessions.GetAsync(createdSession.Code!, CancellationToken);
 			session.Should().NotBeNull();
 			session.Code.Should().Be(createdSession.Code);
 
 			// Clean up session
-			await Client.Sessions.DeleteSessionAsync(createdSession.Code!, CancellationToken);
+			await Client.Sessions.DeleteAsync(createdSession.Code!, CancellationToken);
 		}
 		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_request") || ex.Message.Contains("permission"))
 		{
@@ -57,7 +57,7 @@ public class SessionsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 		}
 		finally
 		{
-			await Client.Groups.DeleteGroupAsync(group.Id!, CancellationToken);
+			await Client.Groups.DeleteAsync(group.Id!, CancellationToken);
 		}
 	}
 
@@ -66,7 +66,7 @@ public class SessionsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 	{
 		// First get a group to assign the session to
 		var testGroupName = $"{TestPrefix}SessionUpdateGroup_{DateTime.UtcNow:HHmmss}";
-		var group = await Client.Groups.CreateGroupAsync(
+		var group = await Client.Groups.CreateAsync(
 			new CreateGroupRequest { Name = testGroupName },
 			CancellationToken);
 
@@ -80,24 +80,24 @@ public class SessionsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 				EndCustomer = "Test Customer"
 			};
 
-			var createdSession = await Client.Sessions.CreateSessionAsync(createRequest, CancellationToken);
+			var createdSession = await Client.Sessions.CreateAsync(createRequest, CancellationToken);
 			var updatedDescription = $"{TestPrefix}UpdatedDesc_{DateTime.UtcNow:HHmmss}";
 
 			try
 			{
 				// Act - Update
-				await Client.Sessions.UpdateSessionAsync(
+				await Client.Sessions.UpdateAsync(
 					createdSession.Code!,
 					new UpdateSessionRequest { Description = updatedDescription },
 					CancellationToken);
 
 				// Verify update
-				var session = await Client.Sessions.GetSessionAsync(createdSession.Code!, CancellationToken);
+				var session = await Client.Sessions.GetAsync(createdSession.Code!, CancellationToken);
 				session.Description.Should().Be(updatedDescription);
 			}
 			finally
 			{
-				await Client.Sessions.DeleteSessionAsync(createdSession.Code!, CancellationToken);
+				await Client.Sessions.DeleteAsync(createdSession.Code!, CancellationToken);
 			}
 		}
 		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_request") || ex.Message.Contains("permission"))
@@ -106,7 +106,7 @@ public class SessionsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 		}
 		finally
 		{
-			await Client.Groups.DeleteGroupAsync(group.Id!, CancellationToken);
+			await Client.Groups.DeleteAsync(group.Id!, CancellationToken);
 		}
 	}
 }

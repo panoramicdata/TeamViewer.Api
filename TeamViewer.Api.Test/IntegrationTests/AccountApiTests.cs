@@ -11,7 +11,7 @@ public class AccountApiTests(ITestOutputHelper testOutputHelper) : BaseTest(test
 		EnsureConfigured();
 
 		// Act
-		var result = await Client.Account.GetAccountAsync(CancellationToken);
+		var result = await Client.Account.GetAsync(CancellationToken);
 
 		// Assert
 		result.Should().NotBeNull();

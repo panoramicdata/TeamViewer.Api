@@ -16,7 +16,9 @@ public interface IUsersApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of users.</returns>
 	[Get("/users")]
-	Task<UserListResponse> GetUsersAsync([Query] GetUsersRequest request, CancellationToken cancellationToken);
+	Task<UserListResponse> GetAsync(
+		[Query] GetUsersRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a specific user by ID.
@@ -25,7 +27,9 @@ public interface IUsersApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The user.</returns>
 	[Get("/users/{userId}")]
-	Task<User> GetUserAsync(string userId, CancellationToken cancellationToken);
+	Task<User> GetAsync(
+		string userId,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Creates a new user in the company.
@@ -34,7 +38,9 @@ public interface IUsersApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The created user.</returns>
 	[Post("/users")]
-	Task<User> CreateUserAsync([Body] CreateUserRequest request, CancellationToken cancellationToken);
+	Task<User> CreateAsync(
+		[Body] CreateUserRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Updates an existing user.
@@ -44,7 +50,10 @@ public interface IUsersApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Put("/users/{userId}")]
-	Task UpdateUserAsync(string userId, [Body] UpdateUserRequest request, CancellationToken cancellationToken);
+	Task UpdateAsync(
+		string userId,
+		[Body] UpdateUserRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Deletes a user from the company.
@@ -53,5 +62,7 @@ public interface IUsersApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Delete("/users/{userId}")]
-	Task DeleteUserAsync(string userId, CancellationToken cancellationToken);
+	Task DeleteAsync(
+		string userId,
+		CancellationToken cancellationToken);
 }

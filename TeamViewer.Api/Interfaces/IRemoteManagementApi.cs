@@ -16,7 +16,9 @@ public interface IRemoteManagementApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of managed devices.</returns>
 	[Get("/managed/devices")]
-	Task<ManagedDeviceListResponse> GetManagedDevicesAsync([Query] GetManagedDevicesRequest request, CancellationToken cancellationToken);
+	Task<ManagedDeviceListResponse> GetManagedDevicesAsync(
+		[Query] GetManagedDevicesRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a specific managed device by ID.
@@ -25,7 +27,9 @@ public interface IRemoteManagementApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The managed device.</returns>
 	[Get("/managed/devices/{deviceId}")]
-	Task<ManagedDevice> GetManagedDeviceAsync(string deviceId, CancellationToken cancellationToken);
+	Task<ManagedDevice> GetManagedDeviceAsync(
+		string deviceId,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a list of managed groups.
@@ -33,7 +37,8 @@ public interface IRemoteManagementApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of managed groups.</returns>
 	[Get("/managed/groups")]
-	Task<ManagedGroupListResponse> GetManagedGroupsAsync(CancellationToken cancellationToken);
+	Task<ManagedGroupListResponse> GetManagedGroupsAsync(
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets a specific managed group by ID.
@@ -42,7 +47,9 @@ public interface IRemoteManagementApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>The managed group.</returns>
 	[Get("/managed/groups/{groupId}")]
-	Task<ManagedGroup> GetManagedGroupAsync(string groupId, CancellationToken cancellationToken);
+	Task<ManagedGroup> GetManagedGroupAsync(
+		string groupId,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Gets devices in a managed group.
@@ -51,7 +58,9 @@ public interface IRemoteManagementApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A list of devices in the group.</returns>
 	[Get("/managed/groups/{groupId}/devices")]
-	Task<ManagedDeviceListResponse> GetManagedGroupDevicesAsync(string groupId, CancellationToken cancellationToken);
+	Task<ManagedDeviceListResponse> GetManagedGroupDevicesAsync(
+		string groupId,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Adds a device to a managed group.
@@ -61,7 +70,10 @@ public interface IRemoteManagementApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Post("/managed/groups/{groupId}/devices")]
-	Task AddDeviceToManagedGroupAsync(string groupId, [Body] AddManagedDeviceRequest request, CancellationToken cancellationToken);
+	Task AddDeviceToManagedGroupAsync(
+		string groupId,
+		[Body] AddManagedDeviceRequest request,
+		CancellationToken cancellationToken);
 
 	/// <summary>
 	/// Removes a device from a managed group.
@@ -71,5 +83,8 @@ public interface IRemoteManagementApi
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <returns>A task representing the operation.</returns>
 	[Delete("/managed/groups/{groupId}/devices/{deviceId}")]
-	Task RemoveDeviceFromManagedGroupAsync(string groupId, string deviceId, CancellationToken cancellationToken);
+	Task RemoveDeviceFromManagedGroupAsync(
+		string groupId,
+		string deviceId,
+		CancellationToken cancellationToken);
 }

@@ -23,7 +23,7 @@ public class EventLoggingApiTests(ITestOutputHelper testOutputHelper) : BaseTest
 		try
 		{
 			// Act
-			var result = await Client.EventLogging.GetEventsAsync(request, CancellationToken);
+			var result = await Client.EventLogging.GetAsync(request, CancellationToken);
 
 			// Assert
 			result.Should().NotBeNull();
@@ -51,7 +51,7 @@ public class EventLoggingApiTests(ITestOutputHelper testOutputHelper) : BaseTest
 		try
 		{
 			// Act
-			var result = await Client.EventLogging.GetEventsAsync(request, CancellationToken);
+			var result = await Client.EventLogging.GetAsync(request, CancellationToken);
 
 			// Assert
 			result.Should().NotBeNull();
