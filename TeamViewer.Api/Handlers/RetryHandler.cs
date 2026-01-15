@@ -6,12 +6,14 @@ namespace TeamViewer.Api.Handlers;
 /// <summary>
 /// HTTP message handler that implements retry logic with exponential backoff.
 /// </summary>
-public class RetryHandler : DelegatingHandler
+/// <remarks>
+/// Initializes a new instance of the <see cref="RetryHandler"/> class.
+/// </remarks>
+public class RetryHandler(
+	int maxRetries,
+	int baseDelayMs,
+	ILogger logger) : DelegatingHandler
 {
-	private readonly int _maxRetries;
-	private readonly int _baseDelayMs;
-	private readonly ILogger<RetryHandler>? _logger;
-
 	private static readonly HttpStatusCode[] RetryableStatusCodes =
 	[
 		HttpStatusCode.RequestTimeout,
@@ -22,40 +24,31 @@ public class RetryHandler : DelegatingHandler
 		HttpStatusCode.GatewayTimeout
 	];
 
-	/// <summary>
-	/// Initializes a new instance of the <see cref="RetryHandler"/> class.
-	/// </summary>
-	public RetryHandler(int maxRetries = 3, int baseDelayMs = 1000, ILogger<RetryHandler>? logger = null)
-	{
-		_maxRetries = maxRetries;
-		_baseDelayMs = baseDelayMs;
-		_logger = logger;
-	}
-
 	/// <inheritdoc/>
 	protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
 	{
 		HttpResponseMessage? response = null;
-		for (var attempt = 0; attempt <= _maxRetries; attempt++)
+		for (var attempt = 0; attempt <= maxRetries; attempt++)
 		{
 			if (attempt > 0)
 			{
-				var delay = _baseDelayMs * (int)Math.Pow(2, attempt - 1);
-				_logger?.LogWarning("Retry attempt {Attempt} after {Delay}ms", attempt, delay);
+				var delay = baseDelayMs * (int)Math.Pow(2, attempt - 1);
+				logger?.LogWarning("Retry attempt {Attempt} after {Delay}ms", attempt, delay);
 				await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
 			}
 
 			try
 			{
 				response = await base.SendAsync(CloneRequest(request), cancellationToken).ConfigureAwait(false);
-				if (!ShouldRetry(response.StatusCode) || attempt == _maxRetries)
+				if (!ShouldRetry(response.StatusCode) || attempt == maxRetries)
 					return response;
 			}
-			catch (HttpRequestException) when (attempt < _maxRetries)
+			catch (HttpRequestException) when (attempt < maxRetries)
 			{
-				_logger?.LogWarning("Request failed, will retry");
+				logger?.LogWarning("Request failed, will retry");
 			}
 		}
+
 		return response!;
 	}
 

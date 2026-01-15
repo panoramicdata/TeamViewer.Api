@@ -12,7 +12,7 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	public void Constructor_WithDefaults_CreatesHandler()
 	{
 		// Act
-		var handler = new RetryHandler();
+		var handler = new RetryHandler(3, 1000, Logger);
 
 		// Assert
 		handler.Should().NotBeNull();
@@ -22,7 +22,7 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	public void Constructor_WithCustomValues_CreatesHandler()
 	{
 		// Act
-		var handler = new RetryHandler(maxRetries: 5, baseDelayMs: 500);
+		var handler = new RetryHandler(5, 500, Logger);
 
 		// Assert
 		handler.Should().NotBeNull();
@@ -33,7 +33,7 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	{
 		// Arrange
 		var callCount = 0;
-		var handler = new RetryHandler(maxRetries: 3, baseDelayMs: 10)
+		var handler = new RetryHandler(3, 10, Logger)
 		{
 			InnerHandler = new TestHandler((_, _) =>
 			{
@@ -57,7 +57,7 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	{
 		// Arrange
 		var callCount = 0;
-		var handler = new RetryHandler(maxRetries: 3, baseDelayMs: 10)
+		var handler = new RetryHandler(3, 10, Logger)
 		{
 			InnerHandler = new TestHandler((_, _) =>
 			{
@@ -81,7 +81,7 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	{
 		// Arrange
 		var callCount = 0;
-		var handler = new RetryHandler(maxRetries: 3, baseDelayMs: 10)
+		var handler = new RetryHandler(3, 10, Logger)
 		{
 			InnerHandler = new TestHandler((_, _) =>
 			{
@@ -107,7 +107,7 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	{
 		// Arrange
 		var callCount = 0;
-		var handler = new RetryHandler(maxRetries: 2, baseDelayMs: 10)
+		var handler = new RetryHandler(2, 10, Logger)
 		{
 			InnerHandler = new TestHandler((_, _) =>
 			{
@@ -137,7 +137,7 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	{
 		// Arrange
 		var callCount = 0;
-		var handler = new RetryHandler(maxRetries: 1, baseDelayMs: 10)
+		var handler = new RetryHandler(1, 10, Logger)
 		{
 			InnerHandler = new TestHandler((_, _) =>
 			{
@@ -160,7 +160,7 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	{
 		// Arrange
 		var callCount = 0;
-		var handler = new RetryHandler(maxRetries: 2, baseDelayMs: 10)
+		var handler = new RetryHandler(2, 10, Logger)
 		{
 			InnerHandler = new TestHandler((_, _) =>
 			{

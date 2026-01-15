@@ -13,7 +13,7 @@ public class LoggingHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(
 	public void Constructor_WithoutLogger_CreatesHandler()
 	{
 		// Act
-		var handler = new LoggingHandler();
+		var handler = new LoggingHandler(Logger);
 
 		// Assert
 		handler.Should().NotBeNull();
@@ -36,7 +36,7 @@ public class LoggingHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(
 	public async Task SendAsync_WithoutLogger_CompletesSuccessfully()
 	{
 		// Arrange
-		var handler = new LoggingHandler()
+		var handler = new LoggingHandler(Logger)
 		{
 			InnerHandler = new TestHandler((_, _) =>
 				Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)))
@@ -82,7 +82,7 @@ public class LoggingHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(
 	{
 		// Arrange
 		HttpRequestMessage? capturedRequest = null;
-		var handler = new LoggingHandler()
+		var handler = new LoggingHandler(null)
 		{
 			InnerHandler = new TestHandler((request, _) =>
 			{

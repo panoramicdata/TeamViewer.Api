@@ -19,8 +19,7 @@ public class TeamViewerClient : ITeamViewerClient
 	/// Initializes a new instance of the <see cref="TeamViewerClient"/> class.
 	/// </summary>
 	/// <param name="options">The client options.</param>
-	/// <param name="loggerFactory">Optional logger factory.</param>
-	public TeamViewerClient(TeamViewerClientOptions options, ILoggerFactory? loggerFactory = null)
+	public TeamViewerClient(TeamViewerClientOptions options)
 	{
 		ArgumentNullException.ThrowIfNull(options);
 
@@ -35,8 +34,11 @@ public class TeamViewerClient : ITeamViewerClient
 
 		// Build handler chain
 		var authHandler = new AuthenticationHandler(options.ScriptToken);
-		var retryHandler = new RetryHandler(options.MaxRetryAttempts, options.RetryDelayMilliseconds, loggerFactory?.CreateLogger<RetryHandler>());
-		var loggingHandler = new LoggingHandler(loggerFactory?.CreateLogger<LoggingHandler>());
+		var retryHandler = new RetryHandler(
+			options.MaxRetryAttempts,
+			options.RetryDelayMilliseconds,
+			options.Logger);
+		var loggingHandler = new LoggingHandler(options.Logger);
 		var errorHandler = new ErrorHandler
 		{
 			// Chain handlers: Logging -> Auth -> Retry -> Error -> HttpClientHandler
@@ -163,7 +165,9 @@ public class TeamViewerClient : ITeamViewerClient
 	public void Dispose()
 	{
 		if (_disposed)
+		{
 			return;
+		}
 
 		_httpClient.Dispose();
 		_disposed = true;
