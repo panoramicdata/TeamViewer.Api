@@ -1,27 +1,28 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<LangVersion>latest</LangVersion>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup>
+<TargetFramework>net10.0</TargetFramework>
+<ImplicitUsings>enable</ImplicitUsings>
+<Nullable>enable</Nullable>
+<LangVersion>latest</LangVersion>
+<GenerateDocumentationFile>true</GenerateDocumentationFile>
+<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+<IsPackable>true</IsPackable>
 
-		<!-- Package Metadata -->
-		<PackageId>TeamViewer.Api</PackageId>
-		<Authors>Panoramic Data Limited</Authors>
-		<Company>Panoramic Data Limited</Company>
-		<Copyright>Copyright (c) Panoramic Data Limited 2025</Copyright>
-		<Description>A comprehensive .NET library for the TeamViewer REST API. Provides full API coverage including Users, Groups, Devices, Sessions, Meetings, Reports, Policies, and Remote Management.</Description>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageProjectUrl>https://github.com/panoramicdata/TeamViewer.Api</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/panoramicdata/TeamViewer.Api</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
-		<PackageTags>TeamViewer;API;REST;Remote;Desktop;Support;Remote-Management;IT;MSP</PackageTags>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageIcon>Logo.png</PackageIcon>
-		<PackageReleaseNotes>Initial release with full TeamViewer API coverage.</PackageReleaseNotes>
-	</PropertyGroup>
+<!-- Package Metadata -->
+<PackageId>TeamViewer.Api</PackageId>
+<Authors>Panoramic Data Limited</Authors>
+<Company>Panoramic Data Limited</Company>
+<Copyright>Copyright (c) Panoramic Data Limited 2025</Copyright>
+<Description>A comprehensive .NET library for the TeamViewer REST API. Provides full API coverage including Users, Groups, Devices, Sessions, Meetings, Reports, Policies, and Remote Management.</Description>
+<PackageLicenseExpression>MIT</PackageLicenseExpression>
+<PackageProjectUrl>https://github.com/panoramicdata/TeamViewer.Api</PackageProjectUrl>
+<RepositoryUrl>https://github.com/panoramicdata/TeamViewer.Api</RepositoryUrl>
+<RepositoryType>git</RepositoryType>
+<PackageTags>TeamViewer;API;REST;Remote;Desktop;Support;Remote-Management;IT;MSP</PackageTags>
+<PackageReadmeFile>README.md</PackageReadmeFile>
+<PackageIcon>Logo.png</PackageIcon>
+<PackageReleaseNotes>Initial release with full TeamViewer API coverage.</PackageReleaseNotes>
+</PropertyGroup>
 	<ItemGroup>
 		<InternalsVisibleTo Include="TeamViewer.Api.Test" />
 	</ItemGroup>

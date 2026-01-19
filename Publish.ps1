@@ -305,11 +305,17 @@ try {
 # ============================================================================
 
 $PackageDir = Join-Path $ScriptDir "nupkgs"
-$NuGetPackages = Get-ChildItem -Path $PackageDir -Filter "*.nupkg" -Exclude "*.symbols.nupkg"
+$NuGetPackages = Get-ChildItem -Path $PackageDir -Filter "*.nupkg" | Where-Object { $_.Name -notlike "*.symbols.nupkg" }
 $SymbolPackages = Get-ChildItem -Path $PackageDir -Filter "*.snupkg"
 
 Write-Information "" -InformationAction Continue
 Write-Step "Created packages:"
+
+if ($NuGetPackages.Count -eq 0) {
+    Write-ErrorMessage "No NuGet packages (.nupkg) were created!"
+    exit 1
+}
+
 foreach ($package in $NuGetPackages) {
     Write-Information "  📦 $($package.Name)" -InformationAction Continue
 }
@@ -334,20 +340,25 @@ Write-Step "Publishing packages to NuGet ($NuGetSource)..."
 Write-Information "" -InformationAction Continue
 
 $publishSuccess = $true
+$packagesPublished = 0
 
 foreach ($package in $NuGetPackages) {
     Write-Information "${ColorCyan}Publishing: $($package.Name)${ColorReset}" -InformationAction Continue
 
     try {
-        dotnet nuget push $package.FullName `
+        $output = dotnet nuget push $package.FullName `
             --api-key $NuGetApiKey `
             --source $NuGetSource `
-            --skip-duplicate
+            --skip-duplicate 2>&1
+        
+        Write-Information $output -InformationAction Continue
 
         if ($LASTEXITCODE -eq 0) {
             Write-Success "Published: $($package.Name)"
+            $packagesPublished++
         } else {
             Write-ErrorMessage "Failed to publish: $($package.Name)"
+            Write-ErrorMessage "Output: $output"
             $publishSuccess = $false
         }
     } catch {
@@ -356,6 +367,11 @@ foreach ($package in $NuGetPackages) {
     }
 
     Write-Information "" -InformationAction Continue
+}
+
+if ($packagesPublished -eq 0) {
+    Write-ErrorMessage "No packages were published!"
+    $publishSuccess = $false
 }
 
 # ============================================================================
