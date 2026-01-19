@@ -1,5 +1,4 @@
 <Solution>
-  <Project Path="TeamViewer.Api\TeamViewer.Api.csproj" />
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
@@ -20,4 +19,5 @@
     <File Path=".github/copilot-instructions.md" />
   </Folder>
   <Project Path="TeamViewer.Api.Test\TeamViewer.Api.Test.csproj" />
+  <Project Path="TeamViewer.Api\TeamViewer.Api.csproj" />
 </Solution>
