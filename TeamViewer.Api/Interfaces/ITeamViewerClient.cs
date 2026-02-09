@@ -134,4 +134,29 @@ public interface ITeamViewerClient : IDisposable
 	/// Gets the IoT API for IoT management.
 	/// </summary>
 	IIotApi Iot { get; }
+
+	/// <summary>
+	/// Gets the OEM API for OEM tenant and licensing management.
+	/// </summary>
+	IOemApi Oem { get; }
+
+	/// <summary>
+	/// Gets the OEM Devices API for OEM device management.
+	/// </summary>
+	IOemDevicesApi OemDevices { get; }
+
+	/// <summary>
+	/// Gets the OAuth2 API for OAuth2 client management.
+	/// </summary>
+	IOAuth2Api OAuth2 { get; }
+
+	/// <summary>
+	/// Gets the Socket Authentication API for WebSocket authentication.
+	/// </summary>
+	ISocketAuthenticationApi SocketAuthentication { get; }
+
+	/// <summary>
+	/// Gets the Reach Notifications API for real-time notification subscriptions.
+	/// </summary>
+	IReachNotificationsApi ReachNotifications { get; }
 }

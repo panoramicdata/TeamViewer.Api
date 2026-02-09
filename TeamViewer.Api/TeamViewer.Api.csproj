@@ -12,7 +12,7 @@
 <PackageId>TeamViewer.Api</PackageId>
 <Authors>Panoramic Data Limited</Authors>
 <Company>Panoramic Data Limited</Company>
-<Copyright>Copyright (c) Panoramic Data Limited 2025</Copyright>
+<Copyright>Copyright (c) Panoramic Data Limited 2026</Copyright>
 <Description>A comprehensive .NET library for the TeamViewer REST API. Provides full API coverage including Users, Groups, Devices, Sessions, Meetings, Reports, Policies, and Remote Management.</Description>
 <PackageLicenseExpression>MIT</PackageLicenseExpression>
 <PackageProjectUrl>https://github.com/panoramicdata/TeamViewer.Api</PackageProjectUrl>
@@ -34,7 +34,7 @@
 		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.2" />
 		<PackageReference Include="Nerdbank.GitVersioning" Version="3.9.50" PrivateAssets="all" />
-		<PackageReference Include="Refit" Version="9.0.2" />
-		<PackageReference Include="Refit.HttpClientFactory" Version="9.0.2" />
+		<PackageReference Include="Refit" Version="10.0.1" />
+		<PackageReference Include="Refit.HttpClientFactory" Version="10.0.1" />
 	</ItemGroup>
 </Project>

@@ -74,6 +74,11 @@ public class TeamViewerClient : ITeamViewerClient
 		Company = RestService.For<ICompanyApi>(_httpClient, refitSettings);
 		CompanyAddressBook = RestService.For<ICompanyAddressBookApi>(_httpClient, refitSettings);
 		Iot = RestService.For<IIotApi>(_httpClient, refitSettings);
+		Oem = RestService.For<IOemApi>(_httpClient, refitSettings);
+		OemDevices = RestService.For<IOemDevicesApi>(_httpClient, refitSettings);
+		OAuth2 = RestService.For<IOAuth2Api>(_httpClient, refitSettings);
+		SocketAuthentication = RestService.For<ISocketAuthenticationApi>(_httpClient, refitSettings);
+		ReachNotifications = RestService.For<IReachNotificationsApi>(_httpClient, refitSettings);
 	}
 
 	/// <inheritdoc/>
@@ -153,6 +158,21 @@ public class TeamViewerClient : ITeamViewerClient
 
 	/// <inheritdoc/>
 	public IIotApi Iot { get; }
+
+	/// <inheritdoc/>
+	public IOemApi Oem { get; }
+
+	/// <inheritdoc/>
+	public IOemDevicesApi OemDevices { get; }
+
+	/// <inheritdoc/>
+	public IOAuth2Api OAuth2 { get; }
+
+	/// <inheritdoc/>
+	public ISocketAuthenticationApi SocketAuthentication { get; }
+
+	/// <inheritdoc/>
+	public IReachNotificationsApi ReachNotifications { get; }
 
 	/// <inheritdoc/>
 	public void Dispose()
