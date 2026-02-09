@@ -45,6 +45,11 @@ public class TeamViewerClientTests
 		client.Company.Should().NotBeNull();
 		client.CompanyAddressBook.Should().NotBeNull();
 		client.Iot.Should().NotBeNull();
+		client.Oem.Should().NotBeNull();
+		client.OemDevices.Should().NotBeNull();
+		client.OAuth2.Should().NotBeNull();
+		client.SocketAuthentication.Should().NotBeNull();
+		client.ReachNotifications.Should().NotBeNull();
 	}
 
 	[Fact]
