@@ -9,7 +9,7 @@
 		<UserSecretsId>teamviewer-api-test</UserSecretsId>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="AwesomeAssertions" Version="9.3.0" />
+		<PackageReference Include="AwesomeAssertions" Version="9.4.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.2" />
