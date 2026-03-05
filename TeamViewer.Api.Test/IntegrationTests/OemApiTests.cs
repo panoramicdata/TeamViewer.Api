@@ -1,5 +1,3 @@
-using TeamViewer.Api.Exceptions;
-
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
@@ -20,24 +18,18 @@ public class OemApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutp
 		// Skip if no account ID available
 		if (string.IsNullOrEmpty(account.UserId))
 		{
+			Assert.Skip("No account user ID available for testing.");
 			return;
 		}
 
-		// Act & Assert - This may fail if OEM access is not available
-		try
-		{
-			var result = await Client.Oem.ResolveTenantsAsync(
-				account.UserId,
-				CancellationToken);
+		// Act
+		var result = await Client.Oem.ResolveTenantsAsync(
+			account.UserId,
+			CancellationToken);
 
-			result.Should().NotBeNull();
-			result.Tenants.Should().NotBeNull();
-		}
-		catch (TeamViewerApiException ex) when (ex.Message.Contains("not authorized") || ex.Message.Contains("access denied"))
-		{
-			// Expected if OEM access is not available
-			Assert.True(true, "OEM API access not available - test skipped");
-		}
+		// Assert
+		result.Should().NotBeNull();
+		result.Tenants.Should().NotBeNull();
 	}
 
 	[Fact]
@@ -45,21 +37,14 @@ public class OemApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutp
 	{
 		EnsureConfigured();
 
-		// Act & Assert
-		try
-		{
-			var result = await Client.Oem.GetLicensingCustomersAsync(
-				null,
-				CancellationToken);
+		// Act
+		var result = await Client.Oem.GetLicensingCustomersAsync(
+			null,
+			CancellationToken);
 
-			result.Should().NotBeNull();
-			result.Customers.Should().NotBeNull();
-		}
-		catch (TeamViewerApiException ex) when (ex.Message.Contains("not authorized") || ex.Message.Contains("access denied"))
-		{
-			// Expected if OEM access is not available
-			Assert.True(true, "OEM API access not available - test skipped");
-		}
+		// Assert
+		result.Should().NotBeNull();
+		result.Customers.Should().NotBeNull();
 	}
 
 	[Fact]
@@ -71,22 +56,15 @@ public class OemApiTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutp
 		var fromDate = DateTime.UtcNow.AddDays(-30);
 		var toDate = DateTime.UtcNow;
 
-		// Act & Assert
-		try
-		{
-			var result = await Client.Oem.GetConnectionReportsAsync(
-				fromDate,
-				toDate,
-				null,
-				CancellationToken);
+		// Act
+		var result = await Client.Oem.GetConnectionReportsAsync(
+			fromDate,
+			toDate,
+			null,
+			CancellationToken);
 
-			result.Should().NotBeNull();
-			result.Reports.Should().NotBeNull();
-		}
-		catch (TeamViewerApiException ex) when (ex.Message.Contains("not authorized") || ex.Message.Contains("access denied"))
-		{
-			// Expected if OEM access is not available
-			Assert.True(true, "OEM API access not available - test skipped");
-		}
+		// Assert
+		result.Should().NotBeNull();
+		result.Reports.Should().NotBeNull();
 	}
 }

@@ -6,16 +6,16 @@ namespace TeamViewer.Api.Models.Responses;
 public class MonitoredDevice
 {
 	/// <summary>
-	/// Gets or sets the device ID.
+	/// Gets or sets the TeamViewer ID of the device.
 	/// </summary>
-	[JsonPropertyName("deviceId")]
-	public string? DeviceId { get; set; }
+	[JsonPropertyName("TeamviewerId")]
+	public long? TeamviewerId { get; set; }
 
 	/// <summary>
-	/// Gets or sets the device name.
+	/// Gets or sets the device alias.
 	/// </summary>
-	[JsonPropertyName("deviceName")]
-	public string? DeviceName { get; set; }
+	[JsonPropertyName("Alias")]
+	public string? Alias { get; set; }
 
 	/// <summary>
 	/// Gets or sets the online state.

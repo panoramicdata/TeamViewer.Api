@@ -1,8 +1,8 @@
 namespace TeamViewer.Api.Models.Responses;
 
 /// <summary>
-/// Represents a TeamViewer policy.
-/// </summary>
+	/// Represents a TeamViewer policy.
+	/// </summary>
 public class Policy
 {
 	/// <summary>
@@ -21,41 +21,29 @@ public class Policy
 	/// Gets or sets the policy settings.
 	/// </summary>
 	[JsonPropertyName("settings")]
-	public PolicySettings? Settings { get; set; }
+	public List<PolicySetting> Settings { get; set; } = [];
 }
 
 /// <summary>
-/// Represents TeamViewer policy settings.
+/// Represents a single TeamViewer policy setting.
 /// </summary>
-public class PolicySettings
+public class PolicySetting
 {
 	/// <summary>
-	/// Gets or sets a value indicating whether to allow incoming connections.
+	/// Gets or sets the setting key.
 	/// </summary>
-	[JsonPropertyName("allow_incoming_connections")]
-	public bool? AllowIncomingConnections { get; set; }
+	[JsonPropertyName("Key")]
+	public string? Key { get; set; }
 
 	/// <summary>
-	/// Gets or sets a value indicating whether to allow outgoing connections.
+	/// Gets or sets the setting value.
 	/// </summary>
-	[JsonPropertyName("allow_outgoing_connections")]
-	public bool? AllowOutgoingConnections { get; set; }
+	[JsonPropertyName("Value")]
+	public JsonElement? Value { get; set; }
 
 	/// <summary>
-	/// Gets or sets the access control mode.
+	/// Gets or sets a value indicating whether the setting is enforced.
 	/// </summary>
-	[JsonPropertyName("access_control")]
-	public string? AccessControl { get; set; }
-
-	/// <summary>
-	/// Gets or sets a value indicating whether to require password.
-	/// </summary>
-	[JsonPropertyName("require_password")]
-	public bool? RequirePassword { get; set; }
-
-	/// <summary>
-	/// Gets or sets the password strength requirement.
-	/// </summary>
-	[JsonPropertyName("password_strength")]
-	public int? PasswordStrength { get; set; }
+	[JsonPropertyName("Enforce")]
+	public bool Enforce { get; set; }
 }

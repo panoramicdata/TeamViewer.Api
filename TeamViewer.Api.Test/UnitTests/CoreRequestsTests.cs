@@ -122,7 +122,7 @@ public class CoreRequestsTests
 
 		// Assert
 		json.Should().Contain("\"users\"");
-		json.Should().Contain("\"user_id\":\"u123\"");
+		json.Should().Contain("\"userid\":\"u123\"");
 		json.Should().Contain("\"permissions\":\"read\"");
 	}
 

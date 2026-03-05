@@ -38,7 +38,7 @@ public class MonitoringApiTests(ITestOutputHelper testOutputHelper) : BaseTest(t
 
 		// Act
 		var result = await Client.Monitoring.GetDeviceInformationAsync(
-			devices[0].DeviceId!,
+			devices[0].TeamviewerId!.Value.ToString(),
 			CancellationToken);
 
 		// Assert
@@ -57,7 +57,7 @@ public class MonitoringApiTests(ITestOutputHelper testOutputHelper) : BaseTest(t
 
 		// Act
 		var result = await Client.Monitoring.GetDeviceHardwareAsync(
-			devices[0].DeviceId!,
+			devices[0].TeamviewerId!.Value.ToString(),
 			CancellationToken);
 
 		// Assert
@@ -76,7 +76,7 @@ public class MonitoringApiTests(ITestOutputHelper testOutputHelper) : BaseTest(t
 
 		// Act
 		var result = await Client.Monitoring.GetDeviceSoftwareAsync(
-			devices[0].DeviceId!,
+			devices[0].TeamviewerId!.Value.ToString(),
 			CancellationToken);
 
 		// Assert
