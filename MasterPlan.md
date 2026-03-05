@@ -447,13 +447,13 @@ TeamViewer.Api/
 
 ## Test Results Summary
 
-**Last Run**: 2026-01-16 (after catch-block remediation)
+**Last Run**: 2026-03-05 (after deserialization fixes)
 
 | Category | Count |
 |----------|-------|
-| ✅ Passed | 157 |
-| ❌ Failed | 48 |
-| ⏭️ Skipped | 1 |
+| ✅ Passed | 161 |
+| ❌ Failed | 27 |
+| ⏭️ Skipped | 18 |
 | **Total** | 206 |
 
 > **Note**: Previous run showed 96 passed / 11 failed / 24 skipped because catch blocks were silently
@@ -552,18 +552,14 @@ The ErrorHandler couldn't parse a known error property from the response body. N
 
 **Required**: OEM/Reach license, Patch Management add-on, Monitoring Policy access, SSO management, Tensor (Conditional Access), Role management permissions, IoT add-on
 
-#### 6. Deserialization errors — Model mismatch with live API (4 tests)
+#### 6. ~~Deserialization errors — Model mismatch with live API (4 tests)~~ ✅ FIXED
 
-The API returns data but the response model doesn't match. These are code bugs to fix.
+~~The API returns data but the response model doesn't match. These are code bugs to fix.~~
 
-| API | Test | Error |
-|-----|------|-------|
-| Policies | `GetPoliciesAsync_ReturnsPolicyList` | `PolicySettings` deserialization failure |
-| Policies | `GetPolicyAsync_WithValidPolicyId_ReturnsPolicy` | `PolicySettings` deserialization failure |
-| Reports | `GetConnectionReportsAsync_ReturnsReportList` | `support_session_type` is Number, model expects String |
-| Reports | `GetConnectionReportsAsync_WithDateFilter_ReturnsFilteredReports` | `support_session_type` is Number, model expects String |
-
-**Action**: Fix `PolicySettings` model type and change `SupportSessionType` from `string` to `int` in the connection report model
+All 4 deserialization issues have been fixed:
+- **Policy.Settings**: Changed from `PolicySettings?` (flat object) to `List<PolicySetting>` — API returns an array of `{Key, Value, Enforce}` objects
+- **ConnectionReport.SupportSessionType**: Changed from `string?` to `int?` — API returns a number
+- **IPoliciesApi.GetAsync(policyId)**: Changed return type from `Task<Policy>` to `Task<PolicyListResponse>` — single-policy endpoint also returns the `{"policies":[...]}` wrapper
 
 ---
 
@@ -589,15 +585,16 @@ The API returns data but the response model doesn't match. These are code bugs t
 | 13 | **SSO management** | 1 | `unknown` |
 | 14 | **Role management permissions** | 2 | `unknown` |
 | 15 | **Monitoring Policy access** | 1 | `unknown` |
-| — | **Model bugs (no license needed)** | 4 | deserialization |
+| — | ~~**Model bugs (no license needed)**~~ | ~~4~~ ✅ 0 | ~~deserialization~~ fixed |
 | — | **Request model investigation** | 4 | `invalid_request` |
 
 ### Action Plan
 
-#### Step 1: Fix model bugs immediately (no license needed)
-1. Fix `PolicySettings` deserialization — the `settings` property is likely a complex/dynamic object, not a simple type
-2. Fix `SupportSessionType` in connection report model — change from `string` to `int` (API returns a number)
-3. Investigate `invalid_request` errors on Contacts, Meetings, and Sessions to check if request models are correct
+#### Step 1: Fix model bugs immediately (no license needed) ✅ DONE
+1. ~~Fix `PolicySettings` deserialization~~ ✅ Changed to `List<PolicySetting>` with `Key`, `Value` (`JsonElement`), `Enforce` properties
+2. ~~Fix `SupportSessionType` in connection report model~~ ✅ Changed from `string?` to `int?`
+3. ~~Fix `IPoliciesApi.GetAsync(policyId)` return type~~ ✅ Changed from `Task<Policy>` to `Task<PolicyListResponse>`
+4. Investigate `invalid_request` errors on Contacts, Meetings, and Sessions to check if request models are correct
 
 #### Step 2: Add missing Script Token scopes
 In the TeamViewer Management Console, add these scopes to the test Script Token:
