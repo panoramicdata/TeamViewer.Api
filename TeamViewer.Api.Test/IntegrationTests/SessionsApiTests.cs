@@ -1,5 +1,3 @@
-using TeamViewer.Api.Exceptions;
-
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
@@ -51,10 +49,6 @@ public class SessionsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 			// Clean up session
 			await Client.Sessions.DeleteAsync(createdSession.Code!, CancellationToken);
 		}
-		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_request") || ex.Message.Contains("permission"))
-		{
-			Assert.Skip("Session creation requires additional API permissions.");
-		}
 		finally
 		{
 			await Client.Groups.DeleteAsync(group.Id!, CancellationToken);
@@ -99,10 +93,6 @@ public class SessionsApiTests(ITestOutputHelper testOutputHelper) : BaseTest(tes
 			{
 				await Client.Sessions.DeleteAsync(createdSession.Code!, CancellationToken);
 			}
-		}
-		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_request") || ex.Message.Contains("permission"))
-		{
-			Assert.Skip("Session management requires additional API permissions.");
 		}
 		finally
 		{

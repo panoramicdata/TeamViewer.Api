@@ -93,5 +93,5 @@ public class ConnectionReport
 	/// Gets or sets the support session type.
 	/// </summary>
 	[JsonPropertyName("support_session_type")]
-	public string? SupportSessionType { get; set; }
+	public int? SupportSessionType { get; set; }
 }

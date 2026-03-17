@@ -1,5 +1,3 @@
-using TeamViewer.Api.Exceptions;
-
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
@@ -20,19 +18,12 @@ public class EventLoggingApiTests(ITestOutputHelper testOutputHelper) : BaseTest
 			Limit = 10
 		};
 
-		try
-		{
-			// Act
-			var result = await Client.EventLogging.GetAsync(request, CancellationToken);
+		// Act
+		var result = await Client.EventLogging.GetAsync(request, CancellationToken);
 
-			// Assert
-			result.Should().NotBeNull();
-			result.AuditEvents.Should().NotBeNull();
-		}
-		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_token") || ex.Message.Contains("permission"))
-		{
-			Assert.Skip("Event Logging API requires additional permissions not available with current token.");
-		}
+		// Assert
+		result.Should().NotBeNull();
+		result.AuditEvents.Should().NotBeNull();
 	}
 
 	[Fact]
@@ -48,18 +39,11 @@ public class EventLoggingApiTests(ITestOutputHelper testOutputHelper) : BaseTest
 			Limit = 10
 		};
 
-		try
-		{
-			// Act
-			var result = await Client.EventLogging.GetAsync(request, CancellationToken);
+		// Act
+		var result = await Client.EventLogging.GetAsync(request, CancellationToken);
 
-			// Assert
-			result.Should().NotBeNull();
-			result.AuditEvents.Should().NotBeNull();
-		}
-		catch (TeamViewerApiException ex) when (ex.Message.Contains("invalid_token") || ex.Message.Contains("permission"))
-		{
-			Assert.Skip("Event Logging API requires additional permissions not available with current token.");
-		}
+		// Assert
+		result.Should().NotBeNull();
+		result.AuditEvents.Should().NotBeNull();
 	}
 }

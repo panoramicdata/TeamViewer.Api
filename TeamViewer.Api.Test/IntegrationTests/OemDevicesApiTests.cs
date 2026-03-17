@@ -1,5 +1,3 @@
-using TeamViewer.Api.Exceptions;
-
 namespace TeamViewer.Api.Test.IntegrationTests;
 
 /// <summary>
@@ -13,18 +11,35 @@ public class OemDevicesApiTests(ITestOutputHelper testOutputHelper) : BaseTest(t
 	{
 		EnsureConfigured();
 
-		// Act & Assert
-		try
-		{
-			var result = await Client.OemDevices.GetDevicesAsync(CancellationToken);
+		// Act
+		var result = await Client.OemDevices.GetDevicesAsync(CancellationToken);
 
-			result.Should().NotBeNull();
-			result.Devices.Should().NotBeNull();
-		}
-		catch (TeamViewerApiException ex) when (ex.Message.Contains("not authorized") || ex.Message.Contains("access denied") || ex.Message.Contains("not found"))
+		// Assert
+		result.Should().NotBeNull();
+		result.Devices.Should().NotBeNull();
+	}
+
+	[Fact]
+	public async Task GetDeviceAsync_WithValidDevice_ReturnsDevice()
+	{
+		EnsureConfigured();
+
+		// Arrange
+		var devices = await Client.OemDevices.GetDevicesAsync(CancellationToken);
+		if (devices.Devices.Count == 0)
 		{
-			// Expected if OEM access is not available
-			Assert.True(true, "OEM Devices API access not available - test skipped");
+			Assert.Skip("No OEM devices available for testing.");
+			return;
 		}
+
+		var deviceId = devices.Devices[0].DeviceId;
+
+		// Act
+		var result = await Client.OemDevices.GetDeviceAsync(deviceId, CancellationToken);
+
+		// Assert
+		result.Should().NotBeNull();
+		result.DeviceId.Should().Be(deviceId);
 	}
 }
+

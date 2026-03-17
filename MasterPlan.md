@@ -447,79 +447,182 @@ TeamViewer.Api/
 
 ## Test Results Summary
 
-**Last Run**: 2026-01-15
+**Last Run**: 2026-03-05 (after deserialization fixes)
 
 | Category | Count |
 |----------|-------|
-| ✅ Passed | 96 |
-| ❌ Failed | 11 |
-| ⏭️ Skipped | 24 |
-| **Total** | 131 |
+| ✅ Passed | 161 |
+| ❌ Failed | 27 |
+| ⏭️ Skipped | 18 |
+| **Total** | 206 |
 
-### Failing Tests Analysis
+> **Note**: Previous run showed 96 passed / 11 failed / 24 skipped because catch blocks were silently
+> suppressing 37+ failures. All catch blocks have now been removed so every failure is visible.
 
-| API | Test | Error | Required Feature |
-|-----|------|-------|------------------|
-| IoT | `GetLatestDataAsync_ReturnsData` | API error | IoT license |
-| IoT | `GetWidgetsAsync_WithValidDashboard_ReturnsWidgets` | API error | IoT license |
-| EndpointProtection | `GetEndpointsAsync_ReturnsEndpointList` | `internal_error` | Endpoint Protection license |
-| ConditionalAccess | `GetFeatureOptionsAsync_ReturnsOptions` | `internal_error` | TeamViewer Tensor |
-| ConditionalAccess | `GetApprovalOptionsAsync_ReturnsOptions` | `internal_error` | TeamViewer Tensor |
-| ConditionalAccess | `GetTimeOptionsAsync_ReturnsOptions` | `internal_error` | TeamViewer Tensor |
-| ConditionalAccess | `GetRulesAsync_ReturnsRuleList` | `internal_error` | TeamViewer Tensor |
-| ConditionalAccess | `CreateUpdateDeleteDirectoryGroupAsync` | `internal_error` | TeamViewer Tensor |
-| ConditionalAccess | `CreateUpdateDeleteRuleAsync` | `internal_error` | TeamViewer Tensor |
-| UserRoles | `GetAccountAssignmentsAsync_ReturnsAssignments` | API error | Role management permissions |
-| UserRoles | `GetUserGroupAssignmentsAsync_ReturnsAssignments` | API error | Role management permissions |
+### Failing Tests — Full Analysis
+
+Tests are grouped by **root cause** to support the licensing email.
+
+#### 1. `not_found` — API endpoint not available on current license (19 tests)
+
+These endpoints return HTTP 404, meaning the API routes don't exist for our account tier.
+
+| API | Test | Error |
+|-----|------|-------|
+| AccessTokens | `GetAccessTokensAsync_ReturnsTokenList` | `not_found` |
+| CompanyBranding | `GetCompanyBrandingAsync_ReturnsBrandingSettings` | `not_found` |
+| CompanyBranding | `UpdateCompanyBrandingAsync_UpdatesBrandingSettings` | `not_found` |
+| IoT | `GetEdgeModulesAsync_ReturnsModuleList` | `not_found` |
+| IoT | `GetDeviceConfigurationsAsync_ReturnsConfigList` | `not_found` |
+| OAuth2 | `GetClientsAsync_ReturnsClientList` | `not_found` |
+| OAuth2 | `CreateUpdateDeleteClientAsync_FullCrudCycle` | `not_found` |
+| OemDevices | `GetDevicesAsync_ReturnsDeviceList` | `not_found` |
+| OemDevices | `GetDeviceAsync_WithValidDevice_ReturnsDevice` | `not_found` |
+| ReachNotifications | `GetSubscriptionsAsync_ReturnsSubscriptionList` | `not_found` |
+| ReachNotifications | `CreateUpdateDeleteSubscriptionAsync_FullCrudCycle` | `not_found` |
+| SocketAuthentication | `AuthenticateAsync_ReturnsToken` | `not_found` |
+| SocketAuthentication | `ValidateTokenAsync_WithValidToken_ReturnsValid` | `not_found` |
+| WebConnector | `GetSessionsAsync_ReturnsSessionList` | `not_found` |
+
+**Required**: OEM/Reach license, WebConnector license, IoT add-on, OAuth2 management access, Socket Authentication access, Access Tokens scope
+
+#### 2. `internal_error` — Feature requires higher-tier license (10 tests)
+
+These endpoints exist but return HTTP 500 `internal_error`, indicating the feature is not provisioned.
+
+| API | Test | Error |
+|-----|------|-------|
+| ConditionalAccess | `GetFeatureOptionsAsync_ReturnsOptions` | `internal_error` |
+| ConditionalAccess | `GetApprovalOptionsAsync_ReturnsOptions` | `internal_error` |
+| ConditionalAccess | `GetTimeOptionsAsync_ReturnsOptions` | `internal_error` |
+| ConditionalAccess | `GetRulesAsync_ReturnsRuleList` | `internal_error` |
+| EndpointProtection | `GetEndpointsAsync_ReturnsEndpointList` | `internal_error` |
+| EventLogging | `GetEventsAsync_WithEventTypeFilter_ReturnsFilteredEvents` | `internal_error` |
+| Monitoring | `GetDeviceInformationAsync_WithValidDevice_ReturnsInfo` | `internal_error` |
+| Monitoring | `GetDeviceHardwareAsync_WithValidDevice_ReturnsHardwareInfo` | `internal_error` |
+| Monitoring | `GetDeviceSoftwareAsync_WithValidDevice_ReturnsSoftwareInfo` | `internal_error` |
+
+**Required**: TeamViewer Tensor (Conditional Access), Endpoint Protection add-on, Event Logging scope, Remote Management license (Monitoring detail endpoints)
+
+#### 3. `invalid_token` — Script token missing required scope (3 tests)
+
+The token doesn't have the required permission scope for these endpoints.
+
+| API | Test | Error |
+|-----|------|-------|
+| Chat | `GetRoomsAsync_ReturnsRoomList` | `invalid_token` |
+| Chat | `GetUnreadMessagesAsync_ReturnsMessageList` | `invalid_token` |
+| Chat | `GetMessagesAsync_WithRoom_ReturnsMessageList` | `invalid_token` |
+
+**Required**: Add `Chat` scope to the Script Token in TeamViewer Management Console
+
+#### 4. `invalid_request` — Request parameters rejected by API (7 tests)
+
+The API rejects the request payload. May indicate wrong parameters, model issues, or permission constraints.
+
+| API | Test | Error |
+|-----|------|-------|
+| Contacts | `InviteAndDeleteContactAsync_InvitesAndDeletesContact` | `invalid_request` |
+| Meetings | `CreateAndDeleteMeetingAsync_CreatesAndDeletesMeeting` | `invalid_request` |
+| Meetings | `UpdateMeetingAsync_UpdatesMeetingSubject` | `invalid_request` |
+| OemApi | `ResolveTenantsAsync_WithAccountId_ReturnsTenants` | `invalid_request` |
+| ConditionalAccess | `CreateUpdateDeleteRuleAsync_FullCrudCycle` | `invalid_request` |
+| Sessions | `CreateAndDeleteSessionAsync_CreatesAndDeletesSession` | `invalid_request` |
+| Sessions | `UpdateSessionAsync_UpdatesSessionDescription` | `invalid_request` |
+
+**Required**: Investigate request models — may need OEM license, Tensor license, or corrected request payloads
+
+#### 5. `An unknown error occurred` — Unrecognised API error response (7 tests)
+
+The ErrorHandler couldn't parse a known error property from the response body. Needs investigation.
+
+| API | Test | Error |
+|-----|------|-------|
+| OemApi | `GetConnectionReportsAsync_ReturnsReportList` | `An unknown error occurred` |
+| OemApi | `GetLicensingCustomersAsync_ReturnsCustomerList` | `An unknown error occurred` |
+| PatchManagement | `GetScanResultCountsAsync_ReturnsResults` | `An unknown error occurred` |
+| PatchManagement | `CreateUpdateDeletePolicyAsync_FullCrudCycle` | `An unknown error occurred` |
+| MonitoringPolicy | `CreateUpdateDeletePolicyAsync_FullCrudCycle` | `An unknown error occurred` |
+| SsoDomain | `CreateAndDeleteSsoDomainAsync_CreatesAndDeletesDomain` | `An unknown error occurred` |
+| ConditionalAccess | `CreateUpdateDeleteDirectoryGroupAsync_FullCrudCycle` | `An unknown error occurred` |
+| UserRoles | `GetAccountAssignmentsAsync_ReturnsAssignments` | `An unknown error occurred` |
+| UserRoles | `GetUserGroupAssignmentsAsync_ReturnsAssignments` | `An unknown error occurred` |
+| IoT | `GetLatestDataAsync_ReturnsData` | `An unknown error occurred` |
+| IoT | `GetWidgetsAsync_WithValidDashboard_ReturnsWidgets` | `An unknown error occurred` |
+
+**Required**: OEM/Reach license, Patch Management add-on, Monitoring Policy access, SSO management, Tensor (Conditional Access), Role management permissions, IoT add-on
+
+#### 6. ~~Deserialization errors — Model mismatch with live API (4 tests)~~ ✅ FIXED
+
+~~The API returns data but the response model doesn't match. These are code bugs to fix.~~
+
+All 4 deserialization issues have been fixed:
+- **Policy.Settings**: Changed from `PolicySettings?` (flat object) to `List<PolicySetting>` — API returns an array of `{Key, Value, Enforce}` objects
+- **ConnectionReport.SupportSessionType**: Changed from `string?` to `int?` — API returns a number
+- **IPoliciesApi.GetAsync(policyId)**: Changed return type from `Task<Policy>` to `Task<PolicyListResponse>` — single-policy endpoint also returns the `{"policies":[...]}` wrapper
 
 ---
 
 ## Phase 37: Feature Access & Test Remediation
-**Goal**: Obtain required TeamViewer licenses and fix remaining API integration issues
+**Goal**: Obtain required TeamViewer licenses, fix model bugs, and get all integration tests passing
 
-### Required Licenses/Features
+### Summary of Required Access
 
-| Feature | License Required | Purpose |
-|---------|------------------|---------|
-| Conditional Access | TeamViewer Tensor | Directory groups, rules, access control |
-| Endpoint Protection | Endpoint Protection Add-on | Device security management |
-| IoT Monitoring | IoT Add-on | Dashboard widgets, sensor data |
-| Remote Management | Remote Management license | Device monitoring, hardware/software info |
-| Role Assignments | Company Admin or custom role | User role assignment management |
+| # | Feature/Scope | Tests Blocked | Error Type |
+|---|---------------|---------------|------------|
+| 1 | **OEM / Reach license** | 8 | `not_found`, `invalid_request`, `unknown` |
+| 2 | **TeamViewer Tensor** | 6 | `internal_error`, `invalid_request`, `unknown` |
+| 3 | **IoT add-on** | 4 | `not_found`, `unknown` |
+| 4 | **Endpoint Protection add-on** | 1 | `internal_error` |
+| 5 | **Remote Management license** | 3 | `internal_error` |
+| 6 | **Patch Management add-on** | 2 | `unknown` |
+| 7 | **Chat scope on Script Token** | 3 | `invalid_token` |
+| 8 | **Event Logging scope** | 1 | `internal_error` |
+| 9 | **WebConnector license** | 1 | `not_found` |
+| 10 | **OAuth2 management access** | 2 | `not_found` |
+| 11 | **Socket Authentication access** | 2 | `not_found` |
+| 12 | **Access Tokens scope** | 1 | `not_found` |
+| 13 | **SSO management** | 1 | `unknown` |
+| 14 | **Role management permissions** | 2 | `unknown` |
+| 15 | **Monitoring Policy access** | 1 | `unknown` |
+| — | ~~**Model bugs (no license needed)**~~ | ~~4~~ ✅ 0 | ~~deserialization~~ fixed |
+| — | **Request model investigation** | 4 | `invalid_request` |
 
 ### Action Plan
 
-#### Step 1: Contact TeamViewer Sales/Support
-1. Request trial access to TeamViewer Tensor (includes Conditional Access)
-2. Request trial access to Endpoint Protection add-on
-3. Request trial access to IoT monitoring features
-4. Confirm Remote Management is enabled on test account
+#### Step 1: Fix model bugs immediately (no license needed) ✅ DONE
+1. ~~Fix `PolicySettings` deserialization~~ ✅ Changed to `List<PolicySetting>` with `Key`, `Value` (`JsonElement`), `Enforce` properties
+2. ~~Fix `SupportSessionType` in connection report model~~ ✅ Changed from `string?` to `int?`
+3. ~~Fix `IPoliciesApi.GetAsync(policyId)` return type~~ ✅ Changed from `Task<Policy>` to `Task<PolicyListResponse>`
+4. Investigate `invalid_request` errors on Contacts, Meetings, and Sessions to check if request models are correct
 
-#### Step 2: API Token Permissions
-1. Review script token permissions in TeamViewer Management Console
-2. Ensure token has the following scopes:
-   - User management (read/write)
-   - Group management (read/write)
-   - Session management (read/write)
-   - Conditional Access management
-   - Role assignment management
-   - Monitoring (read)
-   - Asset management (read)
+#### Step 2: Add missing Script Token scopes
+In the TeamViewer Management Console, add these scopes to the test Script Token:
+- Chat (read/write)
+- Event Logging (read)
+- Access Tokens (read)
 
-#### Step 3: Fix API Response Models
-After obtaining access, verify and fix any remaining model mismatches:
-1. Run failing tests with debug logging enabled
-2. Compare actual API responses to model definitions
-3. Update models as needed (property names, types, nullable fields)
+#### Step 3: Contact TeamViewer Sales/Support for trial licenses
+Email requesting trial access to:
+1. **TeamViewer Tensor** — for Conditional Access, advanced role management
+2. **OEM / Reach API** — for OEM devices, tenants, licensing, connection reports, notifications
+3. **Endpoint Protection add-on** — for endpoint security management
+4. **IoT add-on** — for dashboards, widgets, sensor data, edge modules
+5. **Remote Management license** — for device monitoring detail (hardware/software/info)
+6. **Patch Management add-on** — for patch devices, policies, scan results
+7. **WebConnector license** — for web connector sessions
+8. **OAuth2 management** — for OAuth2 client CRUD
+9. **Socket Authentication** — for socket auth tokens
 
-#### Step 4: Validate All Tests Pass
-1. Run full test suite: `dotnet test`
-2. Ensure all 131 tests pass
-3. No tests should be skipped due to API errors
+#### Step 4: After obtaining access
+1. Re-run full test suite: `dotnet test`
+2. Fix any remaining model mismatches revealed by actual API responses
+3. Target: all 206 tests passing (or genuinely skipped for empty test data only)
 
 ### Deliverable
-- All integration tests passing (or properly skipped with documented reason)
+- All integration tests passing with real API responses
 - Full API coverage validated against live TeamViewer instance
+- No catch blocks suppressing failures
 
 ---
 
