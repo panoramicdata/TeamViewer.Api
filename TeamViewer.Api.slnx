@@ -7,6 +7,7 @@
     <File Path="LICENSE" />
     <File Path="MasterPlan.md" />
     <File Path="nuget-key.txt" />
+    <File Path="Publish.ps1" />
     <File Path="README.md" />
     <File Path="TeamViewer.Api.dic" />
     <File Path="version.json" />
