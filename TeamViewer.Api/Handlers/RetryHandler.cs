@@ -26,31 +26,46 @@ public class RetryHandler(
 	/// <inheritdoc/>
 	protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
 	{
-		HttpResponseMessage? response = null;
 		for (var attempt = 0; attempt <= maxRetries; attempt++)
 		{
-			if (attempt > 0)
-			{
-				var delay = baseDelayMs * (int)Math.Pow(2, attempt - 1);
-				logger?.LogWarning("Retry attempt {Attempt} after {Delay}ms", attempt, delay);
-				await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
-			}
+            await DelayBeforeRetryAsync(attempt, cancellationToken).ConfigureAwait(false);
 
-			try
+			var response = await SendAttemptAsync(request, attempt, cancellationToken).ConfigureAwait(false);
+			if (response is not null)
 			{
-				response = await base.SendAsync(CloneRequest(request), cancellationToken).ConfigureAwait(false);
-				if (!ShouldRetry(response.StatusCode) || attempt == maxRetries)
-				{
-					return response;
-				}
-			}
-			catch (HttpRequestException) when (attempt < maxRetries)
-			{
-				logger?.LogWarning("Request failed, will retry");
+                return response;
 			}
 		}
 
-		return response!;
+       throw new InvalidOperationException("Retry handler did not return a response.");
+	}
+
+ private async Task DelayBeforeRetryAsync(int attempt, CancellationToken cancellationToken)
+	{
+		if (attempt == 0)
+		{
+			return;
+		}
+
+		var delay = baseDelayMs * (int)Math.Pow(2, attempt - 1);
+		logger?.LogWarning("Retry attempt {Attempt} after {Delay}ms", attempt, delay);
+		await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
+	}
+
+	private async Task<HttpResponseMessage?> SendAttemptAsync(HttpRequestMessage request, int attempt, CancellationToken cancellationToken)
+	{
+		try
+		{
+			var response = await base.SendAsync(CloneRequest(request), cancellationToken).ConfigureAwait(false);
+			return ShouldRetry(response.StatusCode) && attempt < maxRetries
+				? null
+				: response;
+		}
+		catch (HttpRequestException) when (attempt < maxRetries)
+		{
+			logger?.LogWarning("Request failed, will retry");
+			return null;
+		}
 	}
 
 	private static bool ShouldRetry(HttpStatusCode statusCode) => Array.Exists(RetryableStatusCodes, s => s == statusCode);
