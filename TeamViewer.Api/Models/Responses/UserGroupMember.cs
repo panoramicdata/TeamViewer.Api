@@ -9,7 +9,7 @@ public class UserGroupMember
 	/// Gets or sets the account ID.
 	/// </summary>
 	[JsonPropertyName("accountId")]
-	public string? AccountId { get; set; }
+	public int? AccountId { get; set; }
 
 	/// <summary>
 	/// Gets or sets the member name.

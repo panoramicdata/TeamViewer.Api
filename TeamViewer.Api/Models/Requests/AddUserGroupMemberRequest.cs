@@ -9,5 +9,5 @@ public class AddUserGroupMemberRequest
 	/// Gets or sets the account ID to add. Required.
 	/// </summary>
 	[JsonPropertyName("accountId")]
-	public required string AccountId { get; set; }
+	public required int AccountId { get; set; }
 }

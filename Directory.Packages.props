@@ -1,8 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageVersion Include="AwesomeAssertions" Version="9.4.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.5" />
@@ -17,5 +17,6 @@
     <PackageVersion Include="Refit.HttpClientFactory" Version="10.1.6" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
     <PackageVersion Include="xunit.v3" Version="3.2.2" />
+    <PackageVersion Include="coverlet.collector" Version="8.0.1" />
   </ItemGroup>
 </Project>
