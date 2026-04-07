@@ -28,7 +28,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test --configuration Release --no-build --verbosity normal --filter "FullyQualifiedName~UnitTests"
+      run: dotnet test --configuration Release --no-build --verbosity normal
 
     - name: Pack
       run: dotnet pack --configuration Release --no-build --output ./artifacts
@@ -61,7 +61,7 @@ jobs:
       id: login
       uses: NuGet/login@v1
       with:
-        user: PanoramicData
+        user: david_n_m_bond
 
     - name: Push to NuGet
       run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
