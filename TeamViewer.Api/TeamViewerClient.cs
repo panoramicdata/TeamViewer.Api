@@ -1,4 +1,4 @@
-namespace TeamViewer.Api;
+﻿namespace TeamViewer.Api;
 
 /// <summary>
 /// Client for interacting with the TeamViewer REST API.
@@ -13,10 +13,51 @@ public class TeamViewerClient : ITeamViewerClient
 	/// </summary>
 	/// <param name="options">The client options.</param>
 	public TeamViewerClient(TeamViewerClientOptions options)
+		: this(CreateHttpClient(options), CreateRefitSettings())
 	{
-		ArgumentNullException.ThrowIfNull(options);
+	}
 
-		var refitSettings = new RefitSettings
+	// The API surface is created in its own constructor so that building the HTTP pipeline and
+	// binding the Refit interfaces stay separately readable rather than one long constructor.
+	private TeamViewerClient(HttpClient httpClient, RefitSettings refitSettings)
+	{
+		_httpClient = httpClient;
+
+		Ping = RestService.For<IPingApi>(httpClient, refitSettings);
+		Account = RestService.For<IAccountApi>(httpClient, refitSettings);
+		Users = RestService.For<IUsersApi>(httpClient, refitSettings);
+		Groups = RestService.For<IGroupsApi>(httpClient, refitSettings);
+		Sessions = RestService.For<ISessionsApi>(httpClient, refitSettings);
+		Devices = RestService.For<IDevicesApi>(httpClient, refitSettings);
+		Contacts = RestService.For<IContactsApi>(httpClient, refitSettings);
+		Reports = RestService.For<IReportsApi>(httpClient, refitSettings);
+		Meetings = RestService.For<IMeetingsApi>(httpClient, refitSettings);
+		EventLogging = RestService.For<IEventLoggingApi>(httpClient, refitSettings);
+		Policies = RestService.For<IPoliciesApi>(httpClient, refitSettings);
+		RemoteManagement = RestService.For<IRemoteManagementApi>(httpClient, refitSettings);
+		CompanyBranding = RestService.For<ICompanyBrandingApi>(httpClient, refitSettings);
+		SsoDomain = RestService.For<ISsoDomainApi>(httpClient, refitSettings);
+		WebConnector = RestService.For<IWebConnectorApi>(httpClient, refitSettings);
+		UserGroups = RestService.For<IUserGroupsApi>(httpClient, refitSettings);
+		UserRoles = RestService.For<IUserRolesApi>(httpClient, refitSettings);
+		Monitoring = RestService.For<IMonitoringApi>(httpClient, refitSettings);
+		MonitoringPolicy = RestService.For<IMonitoringPolicyApi>(httpClient, refitSettings);
+		PatchManagement = RestService.For<IPatchManagementApi>(httpClient, refitSettings);
+		EndpointProtection = RestService.For<IEndpointProtectionApi>(httpClient, refitSettings);
+		Chat = RestService.For<IChatApi>(httpClient, refitSettings);
+		ConditionalAccess = RestService.For<IConditionalAccessApi>(httpClient, refitSettings);
+		Company = RestService.For<ICompanyApi>(httpClient, refitSettings);
+		CompanyAddressBook = RestService.For<ICompanyAddressBookApi>(httpClient, refitSettings);
+		Iot = RestService.For<IIotApi>(httpClient, refitSettings);
+		Oem = RestService.For<IOemApi>(httpClient, refitSettings);
+		OemDevices = RestService.For<IOemDevicesApi>(httpClient, refitSettings);
+		OAuth2 = RestService.For<IOAuth2Api>(httpClient, refitSettings);
+		SocketAuthentication = RestService.For<ISocketAuthenticationApi>(httpClient, refitSettings);
+		ReachNotifications = RestService.For<IReachNotificationsApi>(httpClient, refitSettings);
+	}
+
+	private static RefitSettings CreateRefitSettings()
+		=> new()
 		{
 			ContentSerializer = new SystemTextJsonContentSerializer(new JsonSerializerOptions
 			{
@@ -25,7 +66,11 @@ public class TeamViewerClient : ITeamViewerClient
 			})
 		};
 
-		// Build handler chain
+	private static HttpClient CreateHttpClient(TeamViewerClientOptions options)
+	{
+		ArgumentNullException.ThrowIfNull(options);
+
+		// Chain handlers: Logging -> Auth -> Retry -> Error -> HttpClientHandler
 		var authHandler = new AuthenticationHandler(options.ScriptToken);
 		var retryHandler = new RetryHandler(
 			options.MaxRetryAttempts,
@@ -34,51 +79,17 @@ public class TeamViewerClient : ITeamViewerClient
 		var loggingHandler = new LoggingHandler(options.Logger);
 		var errorHandler = new ErrorHandler
 		{
-			// Chain handlers: Logging -> Auth -> Retry -> Error -> HttpClientHandler
 			InnerHandler = new HttpClientHandler()
 		};
 		retryHandler.InnerHandler = errorHandler;
 		authHandler.InnerHandler = retryHandler;
 		loggingHandler.InnerHandler = authHandler;
 
-		_httpClient = new HttpClient(loggingHandler)
+		return new HttpClient(loggingHandler)
 		{
 			BaseAddress = new Uri(options.BaseUrl),
 			Timeout = options.Timeout
 		};
-
-		// Create Refit interfaces
-		Ping = RestService.For<IPingApi>(_httpClient, refitSettings);
-		Account = RestService.For<IAccountApi>(_httpClient, refitSettings);
-		Users = RestService.For<IUsersApi>(_httpClient, refitSettings);
-		Groups = RestService.For<IGroupsApi>(_httpClient, refitSettings);
-		Sessions = RestService.For<ISessionsApi>(_httpClient, refitSettings);
-		Devices = RestService.For<IDevicesApi>(_httpClient, refitSettings);
-		Contacts = RestService.For<IContactsApi>(_httpClient, refitSettings);
-		Reports = RestService.For<IReportsApi>(_httpClient, refitSettings);
-		Meetings = RestService.For<IMeetingsApi>(_httpClient, refitSettings);
-		EventLogging = RestService.For<IEventLoggingApi>(_httpClient, refitSettings);
-		Policies = RestService.For<IPoliciesApi>(_httpClient, refitSettings);
-		RemoteManagement = RestService.For<IRemoteManagementApi>(_httpClient, refitSettings);
-		CompanyBranding = RestService.For<ICompanyBrandingApi>(_httpClient, refitSettings);
-		SsoDomain = RestService.For<ISsoDomainApi>(_httpClient, refitSettings);
-		WebConnector = RestService.For<IWebConnectorApi>(_httpClient, refitSettings);
-		UserGroups = RestService.For<IUserGroupsApi>(_httpClient, refitSettings);
-		UserRoles = RestService.For<IUserRolesApi>(_httpClient, refitSettings);
-		Monitoring = RestService.For<IMonitoringApi>(_httpClient, refitSettings);
-		MonitoringPolicy = RestService.For<IMonitoringPolicyApi>(_httpClient, refitSettings);
-		PatchManagement = RestService.For<IPatchManagementApi>(_httpClient, refitSettings);
-		EndpointProtection = RestService.For<IEndpointProtectionApi>(_httpClient, refitSettings);
-		Chat = RestService.For<IChatApi>(_httpClient, refitSettings);
-		ConditionalAccess = RestService.For<IConditionalAccessApi>(_httpClient, refitSettings);
-		Company = RestService.For<ICompanyApi>(_httpClient, refitSettings);
-		CompanyAddressBook = RestService.For<ICompanyAddressBookApi>(_httpClient, refitSettings);
-		Iot = RestService.For<IIotApi>(_httpClient, refitSettings);
-		Oem = RestService.For<IOemApi>(_httpClient, refitSettings);
-		OemDevices = RestService.For<IOemDevicesApi>(_httpClient, refitSettings);
-		OAuth2 = RestService.For<IOAuth2Api>(_httpClient, refitSettings);
-		SocketAuthentication = RestService.For<ISocketAuthenticationApi>(_httpClient, refitSettings);
-		ReachNotifications = RestService.For<IReachNotificationsApi>(_httpClient, refitSettings);
 	}
 
 	/// <inheritdoc/>
