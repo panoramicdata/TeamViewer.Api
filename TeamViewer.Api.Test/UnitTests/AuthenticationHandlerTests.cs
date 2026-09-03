@@ -12,7 +12,7 @@ public class AuthenticationHandlerTests(ITestOutputHelper testOutputHelper) : Ba
 	public void Constructor_WithValidToken_CreatesHandler()
 	{
 		// Act
-		var handler = new AuthenticationHandler("test-token");
+		using var handler = new AuthenticationHandler("test-token");
 
 		// Assert
 		handler.Should().NotBeNull();
@@ -32,22 +32,16 @@ public class AuthenticationHandlerTests(ITestOutputHelper testOutputHelper) : Ba
 	{
 		// Arrange
 		const string token = "my-script-token";
-		var handler = new AuthenticationHandler(token)
+		var handler = CreateHandler(token, request =>
 		{
-			InnerHandler = new TestHandler((request, _) =>
-			{
-				// Verify the Authorization header was added
-				request.Headers.Authorization.Should().NotBeNull();
-				request.Headers.Authorization!.Scheme.Should().Be("Bearer");
-				request.Headers.Authorization.Parameter.Should().Be(token);
-				return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
-			})
-		};
-
-		using var client = new HttpClient(handler);
+			// Verify the Authorization header was added
+			request.Headers.Authorization.Should().NotBeNull();
+			request.Headers.Authorization!.Scheme.Should().Be("Bearer");
+			request.Headers.Authorization.Parameter.Should().Be(token);
+		});
 
 		// Act
-		var response = await client.GetAsync("https://example.com/test", CancellationToken);
+		var response = await HandlerTestHarness.SendAsync(handler);
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -57,24 +51,32 @@ public class AuthenticationHandlerTests(ITestOutputHelper testOutputHelper) : Ba
 	public async Task SendAsync_PreservesExistingHeaders()
 	{
 		// Arrange
-		var handler = new AuthenticationHandler("test-token")
+		var handler = CreateHandler("test-token", request =>
 		{
-			InnerHandler = new TestHandler((request, _) =>
-			{
-				request.Headers.TryGetValues("X-Custom-Header", out var values).Should().BeTrue();
-				values.Should().Contain("custom-value");
-				return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
-			})
-		};
-
-		using var client = new HttpClient(handler);
-		using var request = new HttpRequestMessage(HttpMethod.Get, "https://example.com/test");
-		request.Headers.Add("X-Custom-Header", "custom-value");
+			request.Headers.TryGetValues("X-Custom-Header", out var values).Should().BeTrue();
+			values.Should().Contain("custom-value");
+		});
 
 		// Act
-		var response = await client.SendAsync(request, CancellationToken);
+		var response = await HandlerTestHarness.SendAsync(
+			handler,
+			request => request.Headers.Add("X-Custom-Header", "custom-value"));
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
 	}
+
+	/// <summary>
+	/// Builds an <see cref="AuthenticationHandler"/> whose inner handler inspects the request the
+	/// handler produced, then answers OK.
+	/// </summary>
+	private static AuthenticationHandler CreateHandler(string token, Action<HttpRequestMessage> assertRequest)
+		=> new(token)
+		{
+			InnerHandler = new TestHandler((request, _) =>
+			{
+				assertRequest(request);
+				return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
+			})
+		};
 }

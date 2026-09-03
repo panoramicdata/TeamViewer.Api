@@ -2,15 +2,14 @@ using Microsoft.Extensions.Logging;
 
 namespace TeamViewer.Api.Test;
 
-internal class XUnitLogger(ITestOutputHelper testOutputHelper) : ILogger
+/// <summary>
+/// Test logger that writes log entries to the xUnit test output.
+/// </summary>
+internal class XUnitLogger(ITestOutputHelper testOutputHelper) : TestLoggerBase
 {
-	public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
-
-	public bool IsEnabled(LogLevel logLevel) => true;
-
-	public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+	/// <inheritdoc/>
+	protected override void Write(LogLevel logLevel, string message, Exception? exception)
 	{
-		var message = formatter(state, exception);
 		testOutputHelper.WriteLine($"[{logLevel}] {message}");
 		if (exception is not null)
 		{

@@ -8,21 +8,16 @@ namespace TeamViewer.Api.Test.UnitTests;
 /// </summary>
 public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(testOutputHelper)
 {
-	[Fact]
-	public void Constructor_WithDefaults_CreatesHandler()
+	// Short enough that the retry tests do not spend real time backing off.
+	private const int RetryDelayMilliseconds = 10;
+
+	[Theory]
+	[InlineData(3, 1000)]
+	[InlineData(5, 500)]
+	public void Constructor_CreatesHandler(int maxRetryAttempts, int retryDelayMilliseconds)
 	{
 		// Act
-		var handler = new RetryHandler(3, 1000, Logger);
-
-		// Assert
-		handler.Should().NotBeNull();
-	}
-
-	[Fact]
-	public void Constructor_WithCustomValues_CreatesHandler()
-	{
-		// Act
-		var handler = new RetryHandler(5, 500, Logger);
+		using var handler = new RetryHandler(maxRetryAttempts, retryDelayMilliseconds, Logger);
 
 		// Assert
 		handler.Should().NotBeNull();
@@ -31,21 +26,8 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	[Fact]
 	public async Task SendAsync_SuccessfulRequest_ReturnsImmediately()
 	{
-		// Arrange
-		var callCount = 0;
-		var handler = new RetryHandler(3, 10, Logger)
-		{
-			InnerHandler = new TestHandler((_, _) =>
-			{
-				callCount++;
-				return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
-			})
-		};
-
-		using var client = new HttpClient(handler);
-
 		// Act
-		var response = await client.GetAsync("https://example.com/test", CancellationToken);
+		var (response, callCount) = await SendThroughRetryAsync(3, Always(HttpStatusCode.OK));
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -55,21 +37,8 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	[Fact]
 	public async Task SendAsync_ClientError_DoesNotRetry()
 	{
-		// Arrange
-		var callCount = 0;
-		var handler = new RetryHandler(3, 10, Logger)
-		{
-			InnerHandler = new TestHandler((_, _) =>
-			{
-				callCount++;
-				return Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest));
-			})
-		};
-
-		using var client = new HttpClient(handler);
-
 		// Act
-		var response = await client.GetAsync("https://example.com/test", CancellationToken);
+		var (response, callCount) = await SendThroughRetryAsync(3, Always(HttpStatusCode.BadRequest));
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -79,26 +48,10 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	[Fact]
 	public async Task SendAsync_TooManyRequests_RetriesAndSucceeds()
 	{
-		// Arrange
-		var callCount = 0;
-		var handler = new RetryHandler(3, 10, Logger)
-		{
-			InnerHandler = new TestHandler((_, _) =>
-			{
-				callCount++;
-				if (callCount < 2)
-				{
-					return Task.FromResult(new HttpResponseMessage(HttpStatusCode.TooManyRequests));
-				}
-
-				return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
-			})
-		};
-
-		using var client = new HttpClient(handler);
-
 		// Act
-		var response = await client.GetAsync("https://example.com/test", CancellationToken);
+		var (response, callCount) = await SendThroughRetryAsync(
+			3,
+			attempt => new HttpResponseMessage(attempt < 2 ? HttpStatusCode.TooManyRequests : HttpStatusCode.OK));
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -108,21 +61,8 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	[Fact]
 	public async Task SendAsync_ServerError_RetriesMaxTimes()
 	{
-		// Arrange
-		var callCount = 0;
-		var handler = new RetryHandler(2, 10, Logger)
-		{
-			InnerHandler = new TestHandler((_, _) =>
-			{
-				callCount++;
-				return Task.FromResult(new HttpResponseMessage(HttpStatusCode.InternalServerError));
-			})
-		};
-
-		using var client = new HttpClient(handler);
-
 		// Act
-		var response = await client.GetAsync("https://example.com/test", CancellationToken);
+		var (response, callCount) = await SendThroughRetryAsync(2, Always(HttpStatusCode.InternalServerError));
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
@@ -138,21 +78,8 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	[InlineData(HttpStatusCode.GatewayTimeout)]
 	public async Task SendAsync_RetryableStatusCode_Retries(HttpStatusCode statusCode)
 	{
-		// Arrange
-		var callCount = 0;
-		var handler = new RetryHandler(1, 10, Logger)
-		{
-			InnerHandler = new TestHandler((_, _) =>
-			{
-				callCount++;
-				return Task.FromResult(new HttpResponseMessage(statusCode));
-			})
-		};
-
-		using var client = new HttpClient(handler);
-
 		// Act
-		await client.GetAsync("https://example.com/test", CancellationToken);
+		var (_, callCount) = await SendThroughRetryAsync(1, Always(statusCode));
 
 		// Assert
 		callCount.Should().Be(2); // Initial + 1 retry
@@ -161,29 +88,48 @@ public class RetryHandlerTests(ITestOutputHelper testOutputHelper) : BaseTest(te
 	[Fact]
 	public async Task SendAsync_HttpRequestException_Retries()
 	{
-		// Arrange
-		var callCount = 0;
-		var handler = new RetryHandler(2, 10, Logger)
-		{
-			InnerHandler = new TestHandler((_, _) =>
-			{
-				callCount++;
-				if (callCount < 2)
-				{
-					throw new HttpRequestException("Network error");
-				}
-
-				return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
-			})
-		};
-
-		using var client = new HttpClient(handler);
-
 		// Act
-		var response = await client.GetAsync("https://example.com/test", CancellationToken);
+		var (response, callCount) = await SendThroughRetryAsync(
+			2,
+			attempt => attempt < 2
+				? throw new HttpRequestException("Network error")
+				: new HttpResponseMessage(HttpStatusCode.OK));
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
 		callCount.Should().Be(2);
+	}
+
+	/// <summary>
+	/// A response factory that answers every attempt with the same status code.
+	/// </summary>
+	private static Func<int, HttpResponseMessage> Always(HttpStatusCode statusCode)
+		=> _ => new HttpResponseMessage(statusCode);
+
+	/// <summary>
+	/// Sends one request through a <see cref="RetryHandler"/> and reports how many attempts reached
+	/// the inner handler.
+	/// </summary>
+	/// <param name="maxRetryAttempts">Retries the handler is allowed, over and above the first attempt.</param>
+	/// <param name="respond">
+	/// Produces the response for an attempt, numbered from 1. Throwing from it exercises the
+	/// handler's exception retry path.
+	/// </param>
+	private async Task<(HttpResponseMessage Response, int CallCount)> SendThroughRetryAsync(
+		int maxRetryAttempts,
+		Func<int, HttpResponseMessage> respond)
+	{
+		var callCount = 0;
+		var handler = new RetryHandler(maxRetryAttempts, RetryDelayMilliseconds, Logger)
+		{
+			InnerHandler = new TestHandler((_, _) =>
+			{
+				callCount++;
+				return Task.FromResult(respond(callCount));
+			})
+		};
+
+		var response = await HandlerTestHarness.SendAsync(handler);
+		return (response, callCount);
 	}
 }
