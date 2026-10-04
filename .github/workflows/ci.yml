@@ -44,9 +44,8 @@ jobs:
   # because a fork pull request is untrusted code from a stranger. pdl-public is the hardened scale
   # set that may: no dind, no privileged container, no hostPath, nothing shared between jobs.
   #
-  # Only the TeamViewer.Api.Test.UnitTests namespace runs, the same filter build.yml already
-  # uses. The IntegrationTests namespace calls the live TeamViewer API with credentials from
-  # user secrets, which CI does not have.
+  # Only the TeamViewer.Api.Test.UnitTests namespace runs. The IntegrationTests namespace calls
+  # the live TeamViewer API with credentials from user secrets, which CI does not have.
   coverage:
     runs-on: [pdl-public]
 
