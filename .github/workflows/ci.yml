@@ -75,11 +75,14 @@ jobs:
 
     # The test project is a Microsoft.Testing.Platform host, so coverage is collected by running it
     # directly (Microsoft.Testing.Extensions.CodeCoverage). On Linux it has no .exe extension.
+    #
+    # Microsoft.Testing.Extensions.CodeCoverage 18.12 does not resolve a relative --coverage-settings path
+    # against the working directory, so pass it absolute.
     - name: Run tests with coverage
       run: >-
         ./TeamViewer.Api.Test/bin/Debug/net10.0/TeamViewer.Api.Test
         --coverage
-        --coverage-settings coverage.config
+        --coverage-settings ${{ github.workspace }}/coverage.config
         --coverage-output-format cobertura
         --coverage-output coverage.cobertura.xml
         --filter "FullyQualifiedName~UnitTests"
