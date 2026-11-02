@@ -70,13 +70,14 @@ public class TeamViewerClient : ITeamViewerClient
 	{
 		ArgumentNullException.ThrowIfNull(options);
 
-		// Chain handlers: Logging -> Auth -> Retry -> Error -> HttpClientHandler
+		// Chain handlers: ReadOnly -> Logging -> Auth -> Retry -> Error -> HttpClientHandler
 		var authHandler = new AuthenticationHandler(options.ScriptToken);
 		var retryHandler = new RetryHandler(
 			options.MaxRetryAttempts,
 			options.RetryDelayMilliseconds,
 			options.Logger);
 		var loggingHandler = new LoggingHandler(options.Logger);
+		var readOnlyHandler = new ReadOnlyHandler(options);
 		var errorHandler = new ErrorHandler
 		{
 			InnerHandler = new HttpClientHandler()
@@ -84,8 +85,9 @@ public class TeamViewerClient : ITeamViewerClient
 		retryHandler.InnerHandler = errorHandler;
 		authHandler.InnerHandler = retryHandler;
 		loggingHandler.InnerHandler = authHandler;
+		readOnlyHandler.InnerHandler = loggingHandler;
 
-		return new HttpClient(loggingHandler)
+		return new HttpClient(readOnlyHandler)
 		{
 			BaseAddress = new Uri(options.BaseUrl),
 			Timeout = options.Timeout
