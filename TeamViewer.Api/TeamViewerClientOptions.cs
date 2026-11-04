@@ -31,6 +31,11 @@ public class TeamViewerClientOptions
 	public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
 
 	/// <summary>
+	/// Gets or sets whether the client refuses every request other than GET, HEAD and OPTIONS.
+	/// </summary>
+	public bool IsReadOnly { get; set; }
+
+	/// <summary>
 	/// Gets or sets the logger for logging API client activities.
 	/// </summary>
 	public ILogger Logger { get; set; } = NullLogger.Instance;
