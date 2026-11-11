@@ -80,7 +80,7 @@ jobs:
     # against the working directory, so pass it absolute.
     - name: Run tests with coverage
       run: >-
-        ./TeamViewer.Api.Test/bin/Debug/net10.0/TeamViewer.Api.Test
+        ./TeamViewer.Api.Test/bin/Debug/net11.0/TeamViewer.Api.Test
         --coverage
         --coverage-settings ${{ github.workspace }}/coverage.config
         --coverage-output-format cobertura
@@ -94,7 +94,7 @@ jobs:
       uses: codacy/codacy-coverage-reporter-action@v1
       with:
         project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        coverage-reports: TeamViewer.Api.Test/bin/Debug/net10.0/TestResults/coverage.cobertura.xml
+        coverage-reports: TeamViewer.Api.Test/bin/Debug/net11.0/TestResults/coverage.cobertura.xml
 
     - name: Upload coverage artifact
       if: always()
@@ -102,7 +102,7 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         name: coverage
-        path: TeamViewer.Api.Test/bin/Debug/net10.0/TestResults/coverage.cobertura.xml
+        path: TeamViewer.Api.Test/bin/Debug/net11.0/TestResults/coverage.cobertura.xml
         retention-days: 7
 
   publish:
