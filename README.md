@@ -7,6 +7,8 @@
 
 A comprehensive .NET library for the TeamViewer REST API.
 
+Supports .NET 11.0.
+
 ## Installation
 
 ```powershell
@@ -67,7 +69,7 @@ foreach (var device in devices.Devices)
 - **Comprehensive logging support** - Integrates with Microsoft.Extensions.Logging
 - **Strongly-typed models** - Full IntelliSense support with XML documentation
 - **Async/await patterns** - All methods are async with CancellationToken support
-- **Modern .NET** - Built for .NET 10 with nullable reference types
+- **Modern .NET** - Built for .NET 11.0 with nullable reference types
 
 ## Supported APIs
 
