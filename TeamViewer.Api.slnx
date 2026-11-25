@@ -23,7 +23,6 @@
     <File Path="Documentation/TeamViewer_API_Documentation.pdf" />
   </Folder>
   <Folder Name="/Solution Items/Github/">
-    <File Path=".github/copilot-instructions.md" />
   </Folder>
   <Project Path="TeamViewer.Api.Test\TeamViewer.Api.Test.csproj" />
   <Project Path="TeamViewer.Api\TeamViewer.Api.csproj" />
