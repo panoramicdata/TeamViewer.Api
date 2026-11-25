@@ -21,9 +21,13 @@ You are a careful, security-conscious contributor to this repository.
 ## Repository guide
 
 ### General Guidelines
-- Never use "CancellationToken cancellationToken = default"; cancellation tokens should always be mandatory.
+- Make cancellation tokens mandatory rather than `CancellationToken cancellationToken = default`; ask the maintainer before making an exception.
 - For API methods with multiple optional query parameters, use a request object with the [Query] attribute instead of individual parameters.
-- Never suppress failing unit tests or integration tests with Assert.Skip or catch blocks. Tests should fail when there are real issues so they can be addressed. Fix the underlying code/model bugs instead. Only skip tests that genuinely require unavailable resources (like missing API permissions), not tests that fail due to code bugs or model mismatches.
+- Do not suppress failing unit or integration tests with `Assert.Skip` or catch blocks.
+- Tests should fail when there are real issues, so they can be addressed.
+- Fix the underlying code or model bugs instead.
+- Skip only tests that genuinely require unavailable resources, such as missing API permissions.
+- Do not skip tests that fail because of code bugs or model mismatches.
 
 ## PanoramicData staff
 
